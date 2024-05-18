@@ -4,4 +4,5 @@ Rails.application.routes.draw do
       resources :posts
     end
   end
+  post "oauth/callback" => "oauths#callback"
 end
