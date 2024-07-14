@@ -5,8 +5,6 @@
 # :reset_password, :session_timeout, :brute_force_protection, :activity_logging,
 # :magic_login, :external
 Rails.application.config.sorcery.submodules = [:external]
-
-# Here you can configure each submodule's features.
 Rails.application.config.sorcery.configure do |config|
   # -- core --
   # What controller action to call for non-authenticated users. You can also
@@ -80,7 +78,7 @@ Rails.application.config.sorcery.configure do |config|
   # i.e. [:twitter, :facebook, :github, :linkedin, :xing, :google, :liveid, :salesforce, :slack, :line].
   # Default: `[]`
   #
-  # config.external_providers =
+  config.external_providers =[:github]
 
   # You can change it by your local ca_file. i.e. '/etc/pki/tls/certs/ca-bundle.crt'
   # Path to ca_file. By default use a internal ca-bundle.crt.
@@ -136,9 +134,9 @@ Rails.application.config.sorcery.configure do |config|
   # config.instagram.user_info_mapping = {:email => "username"}
   # config.instagram.access_permissions = ["basic", "public_content", "follower_list", "comments", "relationships", "likes"]
   #
-  config.github.key = GITHUB_CLIENT_ID
-  config.github.secret = GITHUB_SECRET
-  config.github.callback_url = "http://127.0.0.1:8000/auth/v1/callback"
+  config.github.key = "Ov23lipUtZEQclrolCBR"
+  config.github.secret = "65268eb3190cf8109e097fb7b94347c5c2ca64a2"
+  config.github.callback_url = "http://127.0.0.1:3000/auth/v1/callback"
   config.github.user_info_mapping = {:email => "name"}
   config.github.scope = ""
   #

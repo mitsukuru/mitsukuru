@@ -1,0 +1,20 @@
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/bootsnap-1.18.3/ext/bootsnap
+/Users/gm510/.rbenv/versions/3.0.6/bin/ruby -I /Users/gm510/.rbenv/versions/3.0.6/lib/ruby/3.0.0 -r ./siteconf20240706-46458-qxh4mm.rb extconf.rb
+checking for fdatasync() in unistd.h... yes
+checking for whether -D_GNU_SOURCE is accepted as CPPFLAGS... yes
+checking for whether -O3 is accepted as CFLAGS... yes
+checking for whether -std=c99 is accepted as CFLAGS... yes
+creating Makefile
+
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/bootsnap-1.18.3/ext/bootsnap
+make DESTDIR\= clean
+
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/bootsnap-1.18.3/ext/bootsnap
+make DESTDIR\=
+compiling bootsnap.c
+linking shared-object bootsnap/bootsnap.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.0'
+
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/bootsnap-1.18.3/ext/bootsnap
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 bootsnap.bundle ./.gem.20240706-46458-yaye47/bootsnap

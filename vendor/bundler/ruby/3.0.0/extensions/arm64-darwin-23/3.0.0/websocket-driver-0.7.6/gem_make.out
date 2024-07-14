@@ -1,0 +1,16 @@
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+/Users/gm510/.rbenv/versions/3.0.6/bin/ruby -I /Users/gm510/.rbenv/versions/3.0.6/lib/ruby/3.0.0 -r ./siteconf20240706-46458-zdidfb.rb extconf.rb
+creating Makefile
+
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\= clean
+
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\=
+compiling websocket_mask.c
+linking shared-object websocket_mask.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.0'
+
+current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 websocket_mask.bundle ./.gem.20240706-46458-1idpmd
