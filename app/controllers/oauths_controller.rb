@@ -1,8 +1,7 @@
 class OauthsController < ApplicationController
   # Frontで取得したToken情報をもとにユーザー認証をするMethod
   def callback
-    debugger
-    provider = params[:provider]
+    provider = params[:code]
     # loginできた場合はここで200を返す
     if @user = login_from(provider)
       render json: { status: 'OK' }
