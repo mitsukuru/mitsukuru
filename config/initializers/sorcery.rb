@@ -136,9 +136,15 @@ Rails.application.config.sorcery.configure do |config|
   #
   config.github.key = "Ov23lipUtZEQclrolCBR"
   config.github.secret = "65268eb3190cf8109e097fb7b94347c5c2ca64a2"
-  config.github.callback_url = "http://127.0.0.1:3000/auth/v1/callback"
-  config.github.user_info_mapping = {:email => "name"}
-  config.github.scope = ""
+  config.github.callback_url = "http://127.0.0.1:3000/api/v1/auth/v1/callback?provider=github"
+  config.github.user_info_mapping = {email: "email", name: "login", remote_avatar_url: "avatar_url"}
+  config.github.scope = "user:email"
+
+  # config.github.key = Rails.application.credentials.dig(:github, :key)
+  # config.github.secret = Rails.application.credentials.dig(:github, :secret)
+  # config.github.callback_url = Rails.application.credentials.dig(:github, :callback_url)
+  # config.github.user_info_mapping = {email: "email", name: "login", remote_avatar_url: "avatar_url"}
+  # config.github.scope = "user:email"
   #
   # config.paypal.key = ""
   # config.paypal.secret = ""
@@ -541,7 +547,7 @@ Rails.application.config.sorcery.configure do |config|
     # Class which holds the various external provider data for this user.
     # Default: `nil`
     #
-    # user.authentications_class =
+    user.authentications_class = Authentication
 
     # User's identifier in the `authentications` class.
     # Default: `:user_id`

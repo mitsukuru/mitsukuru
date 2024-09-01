@@ -40,6 +40,10 @@ gem 'nokogiri'
 gem 'httparty'
 gem 'dotenv-rails', groups: [:development, :test]
 gem "ruby-openai"
+gem 'rack-cors'
+gem 'devise'
+gem 'devise_token_auth'
+gem 'omniauth', '~> 2.1'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

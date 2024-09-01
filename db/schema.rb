@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_24_060135) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_01_082620) do
   create_table "authentications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "provider", null: false
@@ -33,11 +33,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_24_060135) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username", null: false
     t.string "email", null: false
-    t.string "password_digest", null: false
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "remote_avatar_url"
+    t.string "name"
   end
 
 end
