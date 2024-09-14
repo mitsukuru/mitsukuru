@@ -6,9 +6,7 @@ Rails.application.routes.draw do
           get :analyze
         end
       end
-      resources :users, only: [:index] do
-        get "users", to: "users#index"
-      end
+      resources :posts
       post "/auth/v1/callback" => "oauths#callback"
       get "/auth/v1/callback" => "oauths#callback"
       get "/auth/v1/:provider" => "oauths#oauth", as: :auth_at_provider

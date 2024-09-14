@@ -44,3 +44,7 @@ workflows:
                 - cimg/ruby:3.1-node
                 - cimg/ruby:3.2-node
                 - cimg/ruby:3.3-node
+gui:
+  showIcons: true
+  branchLogCmd: "git log --graph --color=always --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' {{branchName}} --"
+  allBranchesLogCmd: "git log --graph --color=always --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all"
