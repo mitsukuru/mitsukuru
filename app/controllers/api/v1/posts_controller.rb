@@ -10,13 +10,7 @@ class Api::V1::PostsController < ApplicationController
     render json: { status: 200, post: post}
   end
 
-  def new
-  end
-
   def create
-  end
-
-  def edit
   end
 
   def update

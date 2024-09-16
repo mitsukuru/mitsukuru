@@ -7,6 +7,7 @@ Rails.application.routes.draw do
         end
       end
       resources :posts
+      resources :users
       post "/auth/v1/callback" => "oauths#callback"
       get "/auth/v1/callback" => "oauths#callback"
       get "/auth/v1/:provider" => "oauths#oauth", as: :auth_at_provider

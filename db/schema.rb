@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_01_082620) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_15_152324) do
   create_table "authentications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "provider", null: false
@@ -26,6 +26,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_01_082620) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.string "image_url"
+    t.datetime "published_at"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
