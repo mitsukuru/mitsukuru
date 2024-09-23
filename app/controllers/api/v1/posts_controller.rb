@@ -11,11 +11,19 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
+    post = Post.new(permit_params)
+    post.save!
   end
 
   def update
   end
 
   def destroy
+  end
+
+  private
+
+  def permit_params
+   params.permit(:title, :body, :description, :imageUrl)
   end
 end
