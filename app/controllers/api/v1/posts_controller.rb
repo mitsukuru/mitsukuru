@@ -12,6 +12,7 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     post = Post.new(permit_params)
+    post.user = current_user
     post.save!
   end
 
@@ -24,6 +25,6 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def permit_params
-   params.permit(:title, :body, :description, :imageUrl)
+   params.require(:post).permit(:title, :body, :description, :image_url)
   end
 end
