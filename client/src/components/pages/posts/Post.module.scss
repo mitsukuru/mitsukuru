@@ -1,0 +1,138 @@
+.appPost {
+  max-width: 32rem;
+  padding: 30px;
+  margin: 10px auto;
+  background-color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.postContent {
+  padding: 1rem;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.userAvatar {
+  width: 3rem;
+  height: 3rem;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatarIcon {
+  width: 100%;
+  height: 100%;
+  color: #4b5563;
+  padding: 0.5rem;
+}
+
+.userName {
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.postTime {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.postTime {
+  font-size: small;
+}
+
+.clockIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+}
+
+.appTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.appName {
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.appDescription {
+  color: #4b5563;
+  font-size: smaller;
+}
+
+.imageGallery {
+  position: relative;
+}
+
+.galleryImage {
+  width: 100%;
+  height: 16rem;
+  object-fit: cover;
+  border-style: groove;
+  border-width: thin;
+}
+
+.galleryButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+.prevButton {
+  left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.nextButton {
+  right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.imageIndicators {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #e3e7ee;
+}
+
+.indicator.active {
+  background-color: #9ca3af;
+}
+

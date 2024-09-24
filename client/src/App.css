@@ -1,0 +1,96 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
+/* Top */
+.top {
+  padding: 100px 0;
+}
+
+.top_title {
+  font-size: 35px;
+  text-align: center;
+}
+
+.nayami {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  line-height: 2;
+}
+
+.img_trouble_person_text {
+  margin: 20px;
+}
+
+.img_trouble_person_text h2 {
+  margin: 10px 0px;
+}
+
+.img_trouble_person_text p {
+  text-align: left;
+}
+
+.img_trouble_person {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+  width: 160px;
+  margin: 5px;
+  aspect-ratio: 250 / 80;
+  object-fit: cover;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 8px;
+  margin-right: 16px;
+}
+
+.menu ul {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin: auto;
+}
+
+.menu a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+/* SignIn */
+
+.github_signin{
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.blueButton {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.blueButton:hover {
+  background-color: darkblue;
+}
