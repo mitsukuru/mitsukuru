@@ -11,7 +11,7 @@ const PostNew = () => {
     description: '',
     body: '',
     image_url: null,
-  });
+  }); 
 
   const handleChange = ({ target: { name, value, files } }) => {
     setFormData((prev) => ({
