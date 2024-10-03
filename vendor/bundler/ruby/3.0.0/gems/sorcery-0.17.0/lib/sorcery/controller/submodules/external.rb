@@ -122,7 +122,7 @@ module Sorcery
           end
 
           # tries to login the user from provider's callback
-          def login_from(provider_name, should_remember = false)
+          def login_from(provider_name, should_remember = true)
             sorcery_fetch_user_hash provider_name
 
             return unless (user = user_class.load_from_provider(provider_name, @user_hash[:uid].to_s))
@@ -136,7 +136,7 @@ module Sorcery
             # sign in the user
             auto_login(user, should_remember)
             after_login!(user)
-
+            user = session[:user_id]
             # return the user
             user
           end

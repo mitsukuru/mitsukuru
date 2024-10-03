@@ -20,21 +20,20 @@ const Home = () => {
   const nextImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
-      [postId]: (prev[postId] || 0) + 1 % images.length
+      [postId]: (prev[postId] || 0 + 1) % images.length
     }));
   };
 
   const prevImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
-      [postId]: (prev[postId] || 0) - 1 + images.length % images.length
+      [postId]: (prev[postId] || 0 - 1 + images.length) % images.length
     }));
   };
 
   const fetchData = async () => {
-    const fetchedPosts = await fetchPosts();
-    const fetchedUsers = await fetchUsers();
     try {
+      const [fetchedPosts, fetchedUsers] = await Promise.all([fetchPosts(), fetchUsers()]);
       setPosts(fetchedPosts.posts);
       setUsers(fetchedUsers.users);
     } catch (error) {

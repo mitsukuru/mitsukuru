@@ -3,7 +3,7 @@ import TroublePerson from "/src/assets/trouble_person.png";
 import SignInGithubButton from "/src/assets/signIn_github_button.svg";
 // const REACT_APP_GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 // const GITHUB_REDIRECT_URL = process.env.REACT_APP_GITHUB_REDIRECT_URL;
-const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=Ov23lipUtZEQclrolCBR&redirect_url=http://localhost:3000/callback/github/&scope=user:email`;
+const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=Ov23lipUtZEQclrolCBR&redirect_url=http://localhost:3000/api/v1/callback/github/&scope=user:email`;
 const Top = () => {
   return (
     <div className="top">

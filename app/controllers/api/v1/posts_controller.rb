@@ -1,4 +1,6 @@
 class Api::V1::PostsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
     posts = Post.all
     render json: { status: 200, posts: posts }
@@ -12,7 +14,7 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     post = Post.new(permit_params)
-    post.user = current_user
+    post.user = User.last
     post.save!
   end
 
@@ -25,6 +27,6 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def permit_params
-   params.require(:post).permit(:title, :body, :description, :image_url)
+   params.require(:post).permit(:title, :body, :description, :image_url, :user_id)
   end
 end

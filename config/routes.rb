@@ -3,9 +3,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :posts
       resources :users
-      post "/auth/v1/callback" => "oauths#callback"
-      get "/auth/v1/callback" => "oauths#callback"
-      get "/auth/v1/:provider" => "oauths#oauth", as: :auth_at_provider
+      post "/callback" => "oauths#callback"
+      get "/callback" => "oauths#callback"
+      get "/:provider" => "oauths#oauth", as: :auth_at_provider
     end
   end
 end

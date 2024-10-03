@@ -1,6 +1,6 @@
 import '../../App.css';
 import logo from '../../assets/mitsukuru-removebg-preview.png';
-import { Link } from 'react-router-dom'; // Assuming you're using react-router-dom
+import { Link } from 'react-router-dom';
 
 
 const Header = () => {
