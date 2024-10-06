@@ -2,7 +2,7 @@ class Api::V1::PostsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    posts = Post.all
+    posts = Post.order(published_at: :desc)
     render json: { status: 200, posts: posts }
   end
 
@@ -15,6 +15,7 @@ class Api::V1::PostsController < ApplicationController
   def create
     post = Post.new(permit_params)
     post.user = User.last
+    post.published_at = Time.zone.now
     post.save!
   end
 

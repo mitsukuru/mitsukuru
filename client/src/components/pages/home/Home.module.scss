@@ -1,11 +1,15 @@
+.container {
+  display: flex;
+}
+.col3 {
+  width: calc(100% / 3);
+  box-sizing: border-box;
+}
 .appPost {
-  max-width: 32rem;
   padding: 30px;
-  margin: 30px auto;
   background-color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border-radius: 0.5rem;
+  border-style: groove;
+  border-width: thin;
   overflow: hidden;
 }
 

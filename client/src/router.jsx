@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'; // useStateをインポート
 import Header from "./components/layouts/Header"
 import Top from "./components/pages/Top"
 import SignIn from "./components/pages/SignIn"
@@ -10,13 +10,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 const Router = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
     return (
         <div>
             <BrowserRouter>
-            <Header />
+            <Header isLoggedIn={isLoggedIn} /> {/* isLoggedInをHeaderに渡す */}
               <Routes>
                 <Route path="/" element={<Top />} />
-                <Route path="/sign_in" element={<SignIn />} />
+                <Route path="/sign_in" element={<SignIn isLoggedIn={isLoggedIn} />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id/posts" element={<Posts />}/>

@@ -41,12 +41,33 @@ const Home = () => {
     }
   };
 
+  const PublishedAt = (published_at) => {
+    const now = new Date();
+    const publishedDate = new Date(published_at);
+    const diffInMinutes = Math.floor((now - publishedDate) / 1000 / 60);
+
+    if (diffInMinutes < 1) {
+      return 'たった今';
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes}分前`;
+    } else if (diffInMinutes < 1440) { // 1440分 = 24時間
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      return `${diffInHours}時間前`;
+    } else {
+      const publishedDate = new Date(published_at);
+      return `${publishedDate.getFullYear()}年${publishedDate.getMonth() + 1}月${publishedDate.getDate()}日`;
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <>
+      <div className={styles.container}>
+        <div className={styles.col3}></div>
+        <div className={styles.col3}>
       {posts.map((post, index)=>
         <div key={index} className={styles.appPost}>
           <div className={styles.postContent}>
@@ -68,7 +89,7 @@ const Home = () => {
                 </h2>
                 <div className={styles.postTime}>
                   <Clock className={styles.clockIcon} />
-                  <span className={styles.postTime}>2時間前</span>
+                  <span className={styles.postTime}>{PublishedAt(post.published_at)}</span>
                 </div>
               </div>
             </div>
@@ -101,7 +122,10 @@ const Home = () => {
             </div>
           </div>
         </div>
-      )}
+          )}
+          </div>
+        <div className={styles.col3}></div>
+        </div>
     </>
   );
 };
