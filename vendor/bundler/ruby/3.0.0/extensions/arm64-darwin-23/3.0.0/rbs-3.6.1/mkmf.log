@@ -1,0 +1,12 @@
+"clang -fdeclspec -o conftest -I/Users/gm510/.rbenv/versions/3.0.6/include/ruby-3.0.0/arm64-darwin23 -I/Users/gm510/.rbenv/versions/3.0.6/include/ruby-3.0.0/ruby/backward -I/Users/gm510/.rbenv/versions/3.0.6/include/ruby-3.0.0 -I. -I/Users/gm510/.rbenv/versions/3.0.6/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wmisleading-indentation -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-cast-function-type -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens -fno-common -pipe conftest.c  -L. -L/Users/gm510/.rbenv/versions/3.0.6/lib -L. -L/Users/gm510/.rbenv/versions/3.0.6/lib  -fstack-protector-strong  -m64   -lruby.3.0   "
+You have not agreed to the Xcode license agreements. Please run 'sudo xcodebuild -license' from within a Terminal window to review and agree to the Xcode and Apple SDKs license.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return !!argv[argc];
+6: }
+/* end */
+
