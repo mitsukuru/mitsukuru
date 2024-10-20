@@ -67,7 +67,7 @@ const Home = () => {
     <>
       <div className={styles.container}>
         <div className={styles.col3}></div>
-        <div className={styles.col3}>
+        <div className={styles.postList}>
       {posts.map((post, index)=>
         <div key={index} className={styles.appPost}>
           <div className={styles.postContent}>

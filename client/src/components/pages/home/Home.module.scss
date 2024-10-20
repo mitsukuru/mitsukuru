@@ -2,8 +2,13 @@
   display: flex;
 }
 .col3 {
-  width: calc(100% / 3);
+  /* width: calc(100% / 4); */
+  flex-basis: 25%;
   box-sizing: border-box;
+}
+
+.postList {
+  flex-basis: 50%;
 }
 .appPost {
   padding: 30px;
@@ -12,6 +17,7 @@
   border-style: groove;
   border-width: thin;
   overflow: hidden;
+  flex-basis: 50%;
 }
 
 .postContent {

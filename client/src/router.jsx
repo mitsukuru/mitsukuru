@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // useStateをインポート
 import Header from "./components/layouts/Header"
 import Top from "./components/pages/Top"
-import SignIn from "./components/pages/SignIn"
+import SignIn from "./components/pages/sessions/sign_in/SignIn"
 import Home from "./components/pages/home/Home"
 import Users from "./components/pages/users/Users"
 import Posts from "./components/pages/posts/Posts"

@@ -13,10 +13,19 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
+    if current_user.nil?
+      render json: { status: 401, message: 'Unauthorized' }, status: :unauthorized
+      return
+    end
+
     post = Post.new(permit_params)
-    post.user = User.last
+    post.user = current_user
     post.published_at = Time.zone.now
-    post.save!
+    if post.save
+      render json: { status: 201, post: post }, status: :created
+    else
+      render json: { status: 422, errors: post.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def update
