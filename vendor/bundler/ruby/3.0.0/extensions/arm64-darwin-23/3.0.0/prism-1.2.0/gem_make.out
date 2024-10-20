@@ -1,5 +1,5 @@
 current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/prism-1.2.0/ext/prism
-/Users/gm510/.rbenv/versions/3.0.6/bin/ruby -I /Users/gm510/.rbenv/versions/3.0.6/lib/ruby/3.0.0 -r ./siteconf20241013-72628-hyzbkj.rb extconf.rb
+/Users/gm510/.rbenv/versions/3.0.6/bin/ruby -I /Users/gm510/.rbenv/versions/3.0.6/lib/ruby/3.0.0 -r ./siteconf20241020-4101-w6fxpj.rb extconf.rb
 checking for prism.h in /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/prism-1.2.0/include... *** extconf.rb failed ***
 Could not create Makefile due to some reason, probably lack of necessary
 libraries and/or headers.  Check the mkmf.log file for more details.  You may

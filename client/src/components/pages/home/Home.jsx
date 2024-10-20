@@ -3,7 +3,7 @@ import { fetchPosts } from '../../../api/postApi'
 import { fetchUsers } from '../../../api/userApi';
 import { User, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './Home.module.scss';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -95,7 +95,7 @@ const Home = () => {
             </div>
             
             <div className={styles.appTitle}>
-              <Link to={`#`} className={styles.appName}>{post.title}</Link>
+              <Link to={`/post/${post.id}`} className={styles.appName}>{post.title}</Link>
               <p className={styles.appDescription}>個人開発物の投稿アプリ</p>
             </div>
             

@@ -6,6 +6,8 @@ import Home from "./components/pages/home/Home"
 import Users from "./components/pages/users/Users"
 import Posts from "./components/pages/posts/Posts"
 import PostNew from "./components/pages/posts/new/PostNew"
+import PostShow from "./components/pages/posts/show/PostShow"
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -23,6 +25,7 @@ const Router = () => {
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id/posts" element={<Posts />}/>
                 <Route path="/posts/new" element={<PostNew />}></Route>
+                <Route path="/post/:id" element={<PostShow />}></Route>
               </Routes>
             </BrowserRouter>
         </div>

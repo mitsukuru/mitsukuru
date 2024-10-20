@@ -1,5 +1,5 @@
 current directory: /Users/gm510/mitsukuru/vendor/bundler/ruby/3.0.0/gems/rbs-3.6.1/ext/rbs_extension
-/Users/gm510/.rbenv/versions/3.0.6/bin/ruby -I /Users/gm510/.rbenv/versions/3.0.6/lib/ruby/3.0.0 -r ./siteconf20241013-72628-qzql20.rb extconf.rb
+/Users/gm510/.rbenv/versions/3.0.6/bin/ruby -I /Users/gm510/.rbenv/versions/3.0.6/lib/ruby/3.0.0 -r ./siteconf20241020-4101-ramvwg.rb extconf.rb
 checking for whether -std=gnu99 is accepted as CFLAGS... *** extconf.rb failed ***
 Could not create Makefile due to some reason, probably lack of necessary
 libraries and/or headers.  Check the mkmf.log file for more details.  You may
