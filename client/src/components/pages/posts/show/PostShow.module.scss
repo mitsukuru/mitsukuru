@@ -1,0 +1,29 @@
+/* client/src/components/pages/posts/show/PostShow.module.scss */
+.postContainer {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.postTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.postContent {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.postInfo {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.postImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}

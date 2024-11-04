@@ -12,12 +12,20 @@ const PostNew = () => {
     body: '',
     image_url: null,
   }); 
+  const [imagePreview, setImagePreview] = useState(null); // 画像プレビュー用の状態を追加
 
   const handleChange = ({ target: { name, value, files } }) => {
     setFormData((prev) => ({
       ...prev,
       [name]: name === 'image_url' ? files[0] : value,
     }));
+
+    // 画像プレビューの設定
+    if (name === 'image_url' && files.length > 0) {
+      const file = files[0];
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl); // プレビューURLを設定
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -62,6 +70,12 @@ const PostNew = () => {
           プロダクト画像:
           <input type="file" name="image_url" accept="image/*" onChange={handleChange} />
         </label>
+        {imagePreview && ( // 画像プレビューを表示
+          <div>
+            <h3>画像プレビュー:</h3>
+            <img src={imagePreview} alt="Image Preview" style={{ maxWidth: '300px', maxHeight: '300px' }} />
+          </div>
+        )}
         <button className={styles.postSubmitButton} type="submit">投稿</button>
       </form>
     </div>
