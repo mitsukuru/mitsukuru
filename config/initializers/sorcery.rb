@@ -135,7 +135,7 @@ Rails.application.config.sorcery.configure do |config|
   # config.instagram.access_permissions = ["basic", "public_content", "follower_list", "comments", "relationships", "likes"]
   #
   config.github.key = "Ov23lipUtZEQclrolCBR"
-  config.github.secret = "65268eb3190cf8109e097fb7b94347c5c2ca64a2"
+  config.github.secret = "034d5a4130df1ced8d69f537c526f1ea4932ac9e"
   config.github.callback_url = "http://127.0.0.1:3000/api/v1/callback?provider=github"
   config.github.user_info_mapping = {email: "email", name: "login", remote_avatar_url: "avatar_url"}
   config.github.scope = "user:email"

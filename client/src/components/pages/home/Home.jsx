@@ -20,14 +20,14 @@ const Home = () => {
   const nextImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
-      [postId]: (prev[postId] || 0 + 1) % images.length
+      [postId]: (prev[postId] !== undefined ? (prev[postId] + 1) % images.length : 0)
     }));
   };
 
   const prevImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
-      [postId]: (prev[postId] || 0 - 1 + images.length) % images.length
+      [postId]: (prev[postId] !== undefined ? (prev[postId] - 1 + images.length) % images.length : images.length - 1)
     }));
   };
 
