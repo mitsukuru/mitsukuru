@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { fetchPosts } from '../../../api/postApi'
 import { fetchUsers } from '../../../api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Clock, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
+  const [currentImages, setCurrentImages] = useState({});
+  const [likes, setLikes] = useState({});
+  const [likesCount, setLikesCount] = useState({});
 
+  // TODO: S3から取得する形に後々変更
   const images = [
     '/src/assets/mitsukuru-removebg-preview.png',
     '/src/assets/test_image2.png',
     '/src/assets/test_image1.png',
   ];
 
-  const [currentImages, setCurrentImages] = useState({});
-
+  // 画像を前送りにする関数
   const nextImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
@@ -24,10 +27,23 @@ const Home = () => {
     }));
   };
 
+  // 画像を後ろ送りにする関数
   const prevImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
       [postId]: (prev[postId] !== undefined ? (prev[postId] - 1 + images.length) % images.length : images.length - 1)
+    }));
+  };
+
+  // いいねをトグルする関数
+  const toggleLike = (postId) => {
+    setLikes((prev) => ({
+      ...prev,
+      [postId]: !prev[postId]
+    }));
+    setLikesCount((prev) => ({
+      ...prev,
+      [postId]: (prev[postId] || 0) + (likes[postId] ? -1 : 1)
     }));
   };
 
@@ -119,6 +135,12 @@ const Home = () => {
                   />
                 ))}
               </div>
+            </div>
+            <div className={styles.likeContainer}>
+              <button onClick={() => toggleLike(post.id)} className={styles.likeButton}>
+                {likes[post.id] ? <Heart color="red" /> : <Heart color="gray" />}
+              </button>
+              <span className={styles.likesCount}>{likesCount[post.id] || 0}</span>
             </div>
           </div>
         </div>
