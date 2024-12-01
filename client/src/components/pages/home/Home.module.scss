@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  margin-top: 30px;
 }
 .col3 {
   /* width: calc(100% / 4); */
@@ -157,6 +158,19 @@
   background-color: #9ca3af;
 }
 
+.postBottoms {
+  display: flex;
+  flex-direction: row;
+}
+
+.likeContainer {
+  padding: 1rem 0 0 1rem;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
 .likeButton {
   background-color: transparent;
   border: none;
@@ -167,12 +181,10 @@
     transform: scale(1.2);
   }
 }
-
-.likeContainer {
-  padding: 1rem;
-  padding-bottom: 0;
+.viewCountContainer {
+  padding: 1rem 0 0 1rem;
   display: flex;
   align-items: stretch;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.5rem; 
 }

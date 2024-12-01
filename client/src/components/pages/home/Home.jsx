@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchPosts } from '../../../api/postApi'
 import { fetchUsers } from '../../../api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,8 @@ const Home = () => {
   const [users, setUsers] = useState([]);
   const [currentImages, setCurrentImages] = useState({});
   const [likes, setLikes] = useState({});
-  const [likesCount, setLikesCount] = useState({});
+  const [likesCount, setLikesCount] = useState(0);
+  const [viewCount, setViewCount] = useState(0);
 
   // TODO: S3から取得する形に後々変更
   const images = [
@@ -23,7 +24,7 @@ const Home = () => {
   const nextImage = (postId) => {
     setCurrentImages((prev) => ({
       ...prev,
-      [postId]: (prev[postId] !== undefined ? (prev[postId] + 1) % images.length : 0)
+      [postId]: (prev[postId] !== undefined ? (prev[postId] + 1) % images.length : 1)
     }));
   };
 
@@ -45,6 +46,15 @@ const Home = () => {
       ...prev,
       [postId]: (prev[postId] || 0) + (likes[postId] ? -1 : 1)
     }));
+  };
+
+  // 詳細画面を開く関数
+  const openDetail = (postId) => {
+    setViewCount((prev) => ({
+      ...prev,
+      [postId]: (prev[postId] || 0) + 1 // 追加: ビューカウントを増加
+    }));
+    // TODO:詳細画面を開く処理をここに追加
   };
 
   const fetchData = async () => {
@@ -84,70 +94,76 @@ const Home = () => {
       <div className={styles.container}>
         <div className={styles.col3}></div>
         <div className={styles.postList}>
-      {posts.map((post, index)=>
-        <div key={index} className={styles.appPost}>
-          <div className={styles.postContent}>
-            <div className={styles.userInfo}>
-              <div className={styles.userAvatar}>
-              {users.find(user => user.id === post.user_id)?.remote_avatar_url ? (
-                <img
-                  src={users.find(user => user.id === post.user_id)?.remote_avatar_url} 
-                  alt="ユーザーのアバター" 
-                  className={styles.avatarIcon} 
-                />
-              ) : (
-                <User className={styles.avatarIcon} />
-              )}
-              </div>
-              <div>
-                <h2 className={styles.userName}>
-                  {users.find(user => user.id === post.user_id)?.name || '名無しさん'}
-                </h2>
-                <div className={styles.postTime}>
-                  <Clock className={styles.clockIcon} />
-                  <span className={styles.postTime}>{PublishedAt(post.published_at)}</span>
+          {posts.map((post, index) =>
+            <div key={index} className={styles.appPost}>
+              <div className={styles.postContent}>
+                <div className={styles.userInfo}>
+                  <div className={styles.userAvatar}>
+                    {users.find(user => user.id === post.user_id)?.remote_avatar_url ? (
+                      <img
+                        src={users.find(user => user.id === post.user_id)?.remote_avatar_url}
+                        alt="ユーザーのアバター"
+                        className={styles.avatarIcon}
+                      />
+                    ) : (
+                      <User className={styles.avatarIcon} />
+                    )}
+                  </div>
+                  <div>
+                    <h2 className={styles.userName}>
+                      {users.find(user => user.id === post.user_id)?.name || '名無しさん'}
+                    </h2>
+                    <div className={styles.postTime}>
+                      <Clock className={styles.clockIcon} />
+                      <span className={styles.postTime}>{PublishedAt(post.published_at)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.appTitle}>
+                  <Link to={`/post/${post.id}`} className={styles.appName}>{post.title}</Link>
+                  <p className={styles.appDescription}>個人開発物の投稿アプリ</p>
+                </div>
+
+                <div className={styles.imageGallery}>
+                  <img
+                    src={images[currentImages[post.id] || 0]}
+                    alt={`アプリの画面 ${currentImages[post.id] + 1 || 1}`}
+                    className={styles.galleryImage}
+                  />
+                  <button onClick={() => prevImage(post.id)} className={styles.galleryButton + ' ' + styles.prevButton}>
+                    <ChevronLeft />
+                  </button>
+                  <button onClick={() => nextImage(post.id)} className={styles.galleryButton + ' ' + styles.nextButton}>
+                    <ChevronRight />
+                  </button>
+                  <div className={styles.imageIndicators}>
+                    {images.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`${styles.indicator} ${index === (currentImages[post.id] || 0) ? styles.active : ''}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.postBottoms}>
+                  <div className={styles.likeContainer}>
+                    <button onClick={() => toggleLike(post.id)} className={styles.likeButton}>
+                      {likes[post.id] ? <Heart color="red" /> : <Heart color="gray" />}
+                    </button>
+                    <span className={styles.likesCount}>{likesCount[post.id] || 0}</span>
+                  </div>
+                  <div className={styles.viewCountContainer}>
+                    <Eye className={styles.viewCountIcon} />
+                    <span className={styles.viewCount}>{viewCount[post.id] || 0}</span>
+                  </div>
                 </div>
               </div>
             </div>
-            
-            <div className={styles.appTitle}>
-              <Link to={`/post/${post.id}`} className={styles.appName}>{post.title}</Link>
-              <p className={styles.appDescription}>個人開発物の投稿アプリ</p>
-            </div>
-            
-            <div className={styles.imageGallery}>
-              <img
-                src={images[currentImages[post.id] || 0]}
-                alt={`アプリの画面 ${currentImages[post.id] + 1 || 1}`}
-                className={styles.galleryImage}
-              />
-              <button onClick={() => prevImage(post.id)} className={styles.galleryButton + ' ' + styles.prevButton}>
-                <ChevronLeft />
-              </button>
-              <button onClick={() => nextImage(post.id)} className={styles.galleryButton + ' ' + styles.nextButton}>
-                <ChevronRight />
-              </button>
-              <div className={styles.imageIndicators}>
-                {images.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`${styles.indicator} ${index === currentImages[post.id] ? styles.active || 'active' : ''}`}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className={styles.likeContainer}>
-              <button onClick={() => toggleLike(post.id)} className={styles.likeButton}>
-                {likes[post.id] ? <Heart color="red" /> : <Heart color="gray" />}
-              </button>
-              <span className={styles.likesCount}>{likesCount[post.id] || 0}</span>
-            </div>
-          </div>
-        </div>
           )}
-          </div>
-        <div className={styles.col3}></div>
         </div>
+        <div className={styles.col3}></div>
+      </div>
     </>
   );
 };
