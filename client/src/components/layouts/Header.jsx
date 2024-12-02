@@ -1,6 +1,8 @@
 import '../../App.css';
 import logo from '../../assets/mitsukuru-removebg-preview.png';
 import { Link } from 'react-router-dom';
+import { SquarePen } from 'lucide-react';
+import Notification from '../features/Notification';
 
 const Header = ({ isLoggedIn }) => {
   return (
@@ -9,11 +11,16 @@ const Header = ({ isLoggedIn }) => {
       <div className='menu'>
         <ul>
           {isLoggedIn && (
-            <li>
-              <Link to='/posts/new'>
-                <button className="blueButton">投稿</button>
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link to='/posts/new'>
+                  <SquarePen className="iconButton" />
+                </Link>
+              </li>
+              <li>
+                <Notification />
+              </li>
+            </>
           )}
           <li><a href="/sign_in">ログイン</a></li>
           <li><a href="">新規登録</a></li>

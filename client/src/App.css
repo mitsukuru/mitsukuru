@@ -41,8 +41,11 @@
 .header {
   display: flex;
   justify-content: space-between;
-  color: white;
   text-align: left;
+}
+
+.header li {
+  list-style-type: none;
 }
 
 .header .logo {
