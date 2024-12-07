@@ -46,6 +46,8 @@
 
 .header li {
   list-style-type: none;
+  display: flex;
+  align-items: flex-end;
 }
 
 .header .logo {
@@ -59,7 +61,7 @@
   display: flex;
   justify-content: space-between;
   column-gap: 8px;
-  margin-right: 16px;
+  margin-right: 2rem;
 }
 
 .menu ul {
@@ -70,6 +72,7 @@
 }
 
 .menu a {
+  height: 30px;
   text-decoration: none;
   color: black;
   font-weight: bold;
@@ -95,4 +98,18 @@
 
 .blueButton:hover {
   background-color: darkblue;
+}
+
+.avatarIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconButton {
+  height: 30px;
 }

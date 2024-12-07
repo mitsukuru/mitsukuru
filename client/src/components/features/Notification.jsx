@@ -1,10 +1,10 @@
 // client/src/components/features/Notification.jsx
-import React, { useState } from 'react'; // useStateをインポート
+import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Notification = ({ count = 2 }) => {
-  const [isClicked, setIsClicked] = useState(false); // クリック状態を管理するステートを追加
+  const [isClicked, setIsClicked] = useState(false);
   const notifications = [ // モックの通知内容
     "新しいメッセージがあります。",
     "友達があなたをフォローしました。"
@@ -12,7 +12,7 @@ const Notification = ({ count = 2 }) => {
 
   return (
     <div>
-      <Link onClick={() => setIsClicked(!isClicked)}> {/* Bellをクリックしたときにステートを更新 */}
+      <div onClick={() => setIsClicked(!isClicked)} style={{ height: '30px'}}>
         <Bell className="iconButton" />
         {count > 0 && (
           <span className="notificationCount" style={{ 
@@ -28,7 +28,7 @@ const Notification = ({ count = 2 }) => {
             {count}
           </span>
         )}
-      </Link>
+      </div>
       {isClicked && ( // クリック時に通知内容を表示
         <div className="notificationDropdown" style={{ 
           position: 'absolute', 
