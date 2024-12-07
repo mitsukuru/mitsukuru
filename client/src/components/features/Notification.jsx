@@ -1,20 +1,23 @@
 // client/src/components/features/Notification.jsx
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-const Notification = ({ count = 2 }) => {
+const Notification = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const notifications = [ // モックの通知内容
+  const notifications = [
     "新しいメッセージがあります。",
-    "友達があなたをフォローしました。"
+    "友達があなたをフォローしました。",
+    "友達があなたをフォローしました。",
+    "友達があなたをフォローしました。",
+    "友達があなたをフォローしました。",
   ];
+  const [notificationCount] = useState(notifications.length);
 
   return (
     <div>
       <div onClick={() => setIsClicked(!isClicked)} style={{ height: '30px'}}>
         <Bell className="iconButton" />
-        {count > 0 && (
+        {notificationCount > 0 && (
           <span className="notificationCount" style={{ 
             position: 'relative', 
             top: '-20px', 
@@ -23,15 +26,17 @@ const Notification = ({ count = 2 }) => {
             borderRadius: '50%', 
             color: 'white', 
             padding: '2px 4px', 
-            fontSize: '12px' 
+            fontSize: '12px',
+            fontWeight: 'bold'
           }}>
-            {count}
+            {notificationCount}
           </span>
         )}
       </div>
       {isClicked && ( // クリック時に通知内容を表示
         <div className="notificationDropdown" style={{ 
           position: 'absolute', 
+          right: '180px',
           backgroundColor: 'white', 
           border: '1px solid #ccc', 
           borderRadius: '4px', 
@@ -44,8 +49,8 @@ const Notification = ({ count = 2 }) => {
               transition: 'background-color 0.3s', 
               fontSize: '14px'
             }} 
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'} // ホバー時の背景色
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'} // ホバー解除時の背景色
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'} // ホバー時の背景色
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'} // ホバー解除時の背景色
             >
               {notification}
             </div>
