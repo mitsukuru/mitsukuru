@@ -5,13 +5,13 @@ import { SquarePen } from 'lucide-react';
 import Notification from '../features/Notification';
 import DirectMessage from '../features/DirectMessage';
 
-const Header = ({ isLoggedIn }) => {
+const Header = ({ isLoggedIn = false }) => {
   return (
     <div className="header">
       <a href='/'><img src={logo} alt="ミツクルロゴ" className='logo' /></a>
       <div className='menu'>
         <ul>
-          {isLoggedIn && (
+          {isLoggedIn ? (
             <>
               <li>
                 <Link to='/posts/new'>
@@ -28,9 +28,13 @@ const Header = ({ isLoggedIn }) => {
                 <img src='https://avatars.githubusercontent.com/u/88922437?v' alt="ユーザーアバター" className='avatarIcon' />
               </li>
             </>
+          ) : (
+            <>
+              <li><a href="#">ミツクルブログ</a></li>
+              <li><a href="/sign_in">ログイン</a></li>
+              <li><a href="">新規登録</a></li>
+            </>
           )}
-          {/* <li><a href="/sign_in">ログイン</a></li>
-          <li><a href="">新規登録</a></li> */}
         </ul>
       </div>
     </div>

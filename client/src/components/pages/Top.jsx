@@ -1,5 +1,7 @@
 import React from "react";
 import TroublePerson from "/src/assets/trouble_person.png";
+import Community from "/src/assets/community_img.png";
+import Analysis from "/src/assets/analysis.png";
 import SignInGithubButton from "/src/assets/signIn_github_button.svg";
 // const REACT_APP_GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 // const GITHUB_REDIRECT_URL = process.env.REACT_APP_GITHUB_REDIRECT_URL;
@@ -9,12 +11,10 @@ const Top = () => {
     <div className="top">
       <div className="top_title">
         <p>
-          企業の<strong>「見つかる」</strong>とエンジニアの
+          プロダクトの価値が<strong>「見つかり」</strong><br/>そして価値を
           <strong>「作る」</strong>
         </p>
-        <p>
-          を掛け合わせた<strong>個人開発プラットフォーム</strong>
-        </p>
+        <p><strong>個人開発プラットフォーム</strong></p>
       </div>
       <div className="nayami">
         <div className="img_trouble_person_text">
@@ -33,6 +33,26 @@ const Top = () => {
             <img src={SignInGithubButton} alt="SignInGithubButton" width={310} height={55} />
           </a>
         </div>
+      <div className="function">
+        <div className="community">
+          <img
+            src={Community}
+            alt="コミュニティ"
+            className="img_community"
+          />
+          <h3 className="community_title">コミュニティ</h3>
+          <p className="community_description"><b>slack</b>や<b>ミツクル</b>を通じて、<br/>コミュニケーションを取ることができます。</p>
+        </div>
+        <div className="analysis">
+          <img
+            src={Analysis}
+            alt="分析"
+            className="img_analysis"
+          />
+          <h3 className="analysis_title">AI分析</h3>
+          <p className="analysis_description">登録したプロダクトをAIで分析、<br/>評価をして開発物を改善できます。</p>
+        </div>
+      </div>
     </div>
   );
 };
