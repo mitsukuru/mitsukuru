@@ -56,11 +56,11 @@ const PostNew = () => {
       <form onSubmit={handleSubmit}>
         <label>
           プロダクト名:
-          <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+          <input type="text" name="title" value={formData.title} onChange={handleChange} required placeholder="例）ミツクル" />
         </label>
         <label>
           概要:
-          <input type="text" name="description" value={formData.description} onChange={handleChange} required />
+          <input type="text" name="description" value={formData.description} onChange={handleChange} required placeholder="例）個人開発物の投稿アプリ" />
         </label>
         <label>
           説明:
@@ -76,7 +76,9 @@ const PostNew = () => {
             <img src={imagePreview} alt="Image Preview" style={{ maxWidth: '300px', maxHeight: '300px' }} />
           </div>
         )}
-        <button className={styles.postSubmitButton} type="submit">投稿</button>
+        <div className={styles.postSubmitButtonContainer}>
+          <button className={styles.postSubmitButton} type="submit">投稿</button>
+        </div>
       </form>
     </div>
   );
