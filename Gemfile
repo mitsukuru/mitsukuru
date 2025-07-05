@@ -40,9 +40,7 @@ gem 'nokogiri'
 gem 'httparty'
 gem 'dotenv-rails', groups: [:development, :test]
 gem "ruby-openai"
-gem 'rack-cors'
-gem 'devise'
-gem 'devise_token_auth'
+# Removed devise gems - using Sorcery for OAuth authentication only
 gem 'omniauth', '~> 2.1'
 gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'

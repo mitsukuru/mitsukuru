@@ -63,7 +63,7 @@ npm run preview
 
 ### Backend (Rails 7.0.8 API)
 - **Database**: SQLite3 (development), structured for User, Post, Authentication models
-- **Authentication**: Dual system using Sorcery (GitHub OAuth) + Devise (traditional auth)
+- **Authentication**: OAuth-only using Sorcery (GitHub OAuth)
 - **File Uploads**: CarrierWave for image handling with local storage
 - **API Structure**: RESTful endpoints under `/api/v1/`
 - **Services**: PortfolioAnalysisService for project analysis using OpenAI
@@ -80,7 +80,7 @@ npm run preview
 # User model
 has_many :posts
 has_many :authentications
-# Uses both Sorcery and Devise authentication
+# Uses Sorcery for OAuth authentication only
 
 # Post model  
 belongs_to :user
@@ -170,9 +170,9 @@ client/src/
 - No frontend tests currently configured
 - Use `rails test` for backend testing
 
-### Known Technical Debt
-- Dual authentication system (Sorcery + Devise) may be redundant
-- Hardcoded API URLs in frontend (should use environment variables)
-- No global state management in React
-- Mixed styling approaches (global CSS + modules)
-- Limited error handling and loading states
+### System Architecture Notes
+- OAuth-only authentication system using Sorcery
+- Centralized error handling with structured logging
+- Environment-based configuration management
+- API-first design with consistent JSON responses
+- Session-based authentication for simplicity
