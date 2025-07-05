@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
   
   before_action :set_current_user
-  helper_method :current_user, :frontend_url, :logged_in?
+  helper_method :current_user, :logged_in?
 
   protected
 
@@ -28,11 +28,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def frontend_config
-    @frontend_config ||= Rails.application.credentials.frontend[Rails.env.to_sym]
-  end
+  # def frontend_config
+  #   @frontend_config ||= Rails.application.credentials.frontend[:development]
+  # end
 
-  def frontend_url(path = '')
-    "#{frontend_config[:base_url]}#{path}"
-  end
+  # def frontend_url(path = '')
+  #   "#{frontend_config[:base_url]}#{path}"
+  # end
 end

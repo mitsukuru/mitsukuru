@@ -2,17 +2,16 @@ class Api::V1::OauthsController < ApplicationController
   # before_action :require_login
 
   def config
-    github_config = Rails.application.credentials.github
     render json: {
       github: {
-        client_id: github_config[:client_id],
-        callback_url: github_config[:callback_url],
-        scope: github_config[:scope]
+        client_id: "Ov23lipUtZEQclrolCBR",
+        callback_url: "http://127.0.0.1:3000/api/v1/callback?provider=github",
+        scope: "user:email"
       },
       frontend: {
-        base_url: frontend_config[:base_url],
-        home_path: frontend_config[:home_path],
-        login_path: frontend_config[:login_path]
+        base_url: "http://localhost:5173",
+        home_path: "/home",
+        login_path: "/sign_in"
       }
     }
   end
@@ -54,16 +53,35 @@ class Api::V1::OauthsController < ApplicationController
       if @user = login_from(provider)
         # 既存ユーザーのログイン成功
         Rails.logger.info "OAuth認証成功: ユーザーID #{@user.id} (#{provider})"
-        redirect_to frontend_url(frontend_config[:home_path]), allow_other_host: true
+        Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
+        # LocalStorage用のユーザー情報をエンコード
+        user_data = {
+          id: @user.id,
+          name: @user.name,
+          email: @user.email,
+          remote_avatar_url: @user.remote_avatar_url
+        }.to_json
+        encoded_user = Base64.strict_encode64(user_data)
+        base_url = Rails.application.credentials.frontend[:development][:base_url]
+        redirect_to "#{base_url}/auth/loading?auth_success=#{encoded_user}", allow_other_host: true
       else
         # 新規ユーザー作成
         @user = create_from(provider)
         
         if @user&.persisted?
           auto_login(@user)
-          reset_session
           Rails.logger.info "OAuth新規ユーザー作成成功: ユーザーID #{@user.id} (#{provider})"
-          redirect_to frontend_url(frontend_config[:home_path]), allow_other_host: true
+          Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
+          # LocalStorage用のユーザー情報をエンコード
+          user_data = {
+            id: @user.id,
+            name: @user.name,
+            email: @user.email,
+            remote_avatar_url: @user.remote_avatar_url
+          }.to_json
+          encoded_user = Base64.strict_encode64(user_data)
+          base_url = Rails.application.credentials.frontend[:development][:base_url]
+          redirect_to "#{base_url}/auth/loading?auth_success=#{encoded_user}", allow_other_host: true
         else
           handle_oauth_error("ユーザー作成に失敗しました", provider, @user&.errors&.full_messages)
         end
@@ -92,7 +110,10 @@ class Api::V1::OauthsController < ApplicationController
       error_id: error_id
     }
     
-    redirect_to "#{frontend_url(frontend_config[:login_path])}?#{error_params.to_query}", 
+    login_path = Rails.application.credentials.frontend[:development][:login_path]
+    base_url = Rails.application.credentials.frontend[:development][:base_url]
+    
+    redirect_to "#{base_url}#{login_path}?#{error_params.to_query}", 
                allow_other_host: true
   end
 end

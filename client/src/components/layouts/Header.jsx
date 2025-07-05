@@ -1,20 +1,37 @@
-import '../../App.css';
-import logo from '../../assets/mitsukuru-removebg-preview.png';
+import '@/App.css';
+import logo from '@/assets/mitsukuru-removebg-preview.png';
 import { Link } from 'react-router-dom';
-import { SquarePen } from 'lucide-react';
-import Notification from '../features/Notification';
-import DirectMessage from '../features/DirectMessage';
+import { SquarePen, User } from 'lucide-react';
+import Notification from '@/components/features/Notification';
+import DirectMessage from '@/components/features/DirectMessage';
+import useAuth from '@/hooks/useAuth';
+import { useEffect } from 'react';
 
-const Header = ({ isLoggedIn = false }) => {
+const Header = () => {
+  const { user, isAuthenticated, loading, logout } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="header">
+        <a href='/'><img src={logo} alt="ミツクルロゴ" className='logo' /></a>
+        <div className='menu'>
+          <ul>
+            <li>読み込み中...</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="header">
-      <a href='/'><img src={logo} alt="ミツクルロゴ" className='logo' /></a>
+      <Link to='/'><img src={logo} alt="ミツクルロゴ" className='logo' /></Link>
       <div className='menu'>
         <ul>
-          {isLoggedIn ? (
+          {isAuthenticated && user ? (
             <>
               <li>
-                <Link to='/posts/new'>
+                <Link to='/posts/new' title="新規投稿">
                   <SquarePen className="iconButton" />
                 </Link>
               </li>
@@ -24,15 +41,29 @@ const Header = ({ isLoggedIn = false }) => {
               <li>
                 <DirectMessage />
               </li>
-              <li>
-                <img src='https://avatars.githubusercontent.com/u/88922437?v' alt="ユーザーアバター" className='avatarIcon' />
+              <li className="userProfile">
+                {user.remote_avatar_url ? (
+                  <img 
+                    src={user.remote_avatar_url} 
+                    alt={`${user.name}のアバター`} 
+                    className='avatarIcon' 
+                    title={user.name}
+                  />
+                ) : (
+                  <User className="avatarIcon" title={user.name} />
+                )}
+                <div className="userDropdown">
+                  <Link to={`/users/${user.id}`}>プロフィール</Link>
+                  <Link to="/settings">設定</Link>
+                  <button onClick={logout} className="logoutButton">
+                    ログアウト
+                  </button>
+                </div>
               </li>
             </>
           ) : (
             <>
-              <li><a href="#">ミツクルブログ</a></li>
-              <li><a href="/sign_in">ログイン</a></li>
-              <li><a href="">新規登録</a></li>
+              <li><Link to="/sign_in">ログイン</Link></li>
             </>
           )}
         </ul>

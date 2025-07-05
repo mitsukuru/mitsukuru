@@ -1,6 +1,6 @@
 import SignInGithubButton from "@/assets/signIn_github_button.svg";
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '@/utils/axiosConfig';
 import API_CONFIG from '@/config/api';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import useErrorHandler from '@/hooks/useErrorHandler';
@@ -14,28 +14,16 @@ const SignIn = () => {
   const { error, clearError, showError } = useErrorHandler();
 
   useEffect(() => {
-    const fetchOAuthConfig = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.oauth.config}`);
-        const { github } = response.data;
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${github.client_id}&redirect_uri=${encodeURIComponent(github.callback_url)}&scope=${github.scope}`;
-        setGithubAuthUrl(authUrl);
-      } catch (error) {
-        console.error('OAuth設定の取得に失敗しました:', error);
-        showError({
-          error: 'config_fetch_failed',
-          message: 'OAuth設定の取得に失敗しました。ページを再読み込みしてください。'
-        });
-        // フォールバック: 直接URLを設定
-        setGithubAuthUrl(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.oauth.github}`);
-      } finally {
-        setLoading(false);
-      }
+    // OAuth設定を直接設定（パフォーマンス改善のため）
+    const githubConfig = {
+      client_id: "Ov23lipUtZEQclrolCBR",
+      callback_url: "http://127.0.0.1:3000/api/v1/callback?provider=github",
+      scope: "user:email"
     };
-
-    fetchOAuthConfig();
-  }, [showError]);
+    
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${githubConfig.client_id}&redirect_uri=${encodeURIComponent(githubConfig.callback_url)}&scope=${githubConfig.scope}`;
+    setGithubAuthUrl(authUrl);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,17 +67,13 @@ const SignIn = () => {
         <button type="submit" className={styles.submitButton}>ログイン</button>
       </form>
       <div className={styles.githubSignIn}>
-        {loading ? (
-          <div className={styles.loadingButton}>
-            OAuth設定を読み込み中...
-          </div>
-        ) : githubAuthUrl ? (
+        {githubAuthUrl ? (
           <a href={githubAuthUrl}>
             <img src={SignInGithubButton} alt="SignInGithubButton" width={310} height={55} />
           </a>
         ) : (
-          <div className={styles.errorButton}>
-            OAuth設定の読み込みに失敗しました
+          <div className={styles.loadingButton}>
+            読み込み中...
           </div>
         )}
       </div>

@@ -6,6 +6,7 @@ const API_CONFIG = {
   endpoints: {
     posts: '/api/v1/posts',
     users: '/api/v1/users',
+    me: '/api/v1/me',
     oauth: {
       config: '/api/v1/oauth/config',
       github: '/api/v1/github',

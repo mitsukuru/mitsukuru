@@ -4,10 +4,12 @@ import { fetchUsers } from '@/api/userApi';
 import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
+  const { refreshAuth } = useAuth();
   const [currentImages, setCurrentImages] = useState({});
   const [likes, setLikes] = useState({});
   const [likesCount, setLikesCount] = useState(0);
@@ -89,6 +91,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
+    refreshAuth();
   }, []);
 
   return (

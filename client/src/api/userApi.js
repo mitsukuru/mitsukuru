@@ -1,10 +1,10 @@
-import axios from "axios";
-import API_CONFIG from "../config/api";
-import { handleApiError } from "../utils/apiErrorHandler";
+import axios from "@/utils/axiosConfig";
+import API_CONFIG from "@/config/api";
+import { handleApiError } from "@/utils/apiErrorHandler";
 
 export const fetchUsers = async () => {
   try {
-    const res = await axios.get(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.users}`);
+    const res = await axios.get(API_CONFIG.endpoints.users);
     return res.data;
   } catch (error) {
     handleApiError(error, 'fetchUsers');
