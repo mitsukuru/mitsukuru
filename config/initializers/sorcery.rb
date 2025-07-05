@@ -134,17 +134,12 @@ Rails.application.config.sorcery.configure do |config|
   # config.instagram.user_info_mapping = {:email => "username"}
   # config.instagram.access_permissions = ["basic", "public_content", "follower_list", "comments", "relationships", "likes"]
   #
-  config.github.key = "Ov23lipUtZEQclrolCBR"
-  config.github.secret = "034d5a4130df1ced8d69f537c526f1ea4932ac9e"
-  config.github.callback_url = "http://127.0.0.1:3000/api/v1/callback?provider=github"
+  # GitHub OAuth configuration using Rails credentials
+  config.github.key = Rails.application.credentials.dig(:github, :client_id)
+  config.github.secret = Rails.application.credentials.dig(:github, :client_secret)
+  config.github.callback_url = Rails.application.credentials.dig(:github, :callback_url)
   config.github.user_info_mapping = {email: "email", name: "login", remote_avatar_url: "avatar_url"}
-  config.github.scope = "user:email"
-
-  # config.github.key = Rails.application.credentials.dig(:github, :key)
-  # config.github.secret = Rails.application.credentials.dig(:github, :secret)
-  # config.github.callback_url = Rails.application.credentials.dig(:github, :callback_url)
-  # config.github.user_info_mapping = {email: "email", name: "login", remote_avatar_url: "avatar_url"}
-  # config.github.scope = "user:email"
+  config.github.scope = Rails.application.credentials.dig(:github, :scope)
   #
   # config.paypal.key = ""
   # config.paypal.secret = ""

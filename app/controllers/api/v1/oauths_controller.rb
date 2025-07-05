@@ -1,6 +1,17 @@
 class Api::V1::OauthsController < ApplicationController
   # before_action :require_login
 
+  def config
+    github_config = Rails.application.credentials.github
+    render json: {
+      github: {
+        client_id: github_config[:client_id],
+        callback_url: github_config[:callback_url],
+        scope: github_config[:scope]
+      }
+    }
+  end
+
   def oauth
     if logged_in?
       render json: { redirect_to: '/users', message: t('defaults.info') }
