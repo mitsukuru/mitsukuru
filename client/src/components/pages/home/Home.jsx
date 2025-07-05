@@ -64,6 +64,8 @@ const Home = () => {
       setUsers(fetchedUsers.users);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
+      // TODO: エラーハンドリングUIの追加を検討
+      // 現在はコンソールログのみ
     }
   };
 

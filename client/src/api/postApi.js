@@ -1,11 +1,21 @@
 import axios from "axios";
+import API_CONFIG from "../config/api";
+import { handleApiError } from "../utils/apiErrorHandler";
 
 export const fetchPosts = async () => {
-  const res = await axios.get("http://localhost:3000/api/v1/posts");
-  return res.data;
+  try {
+    const res = await axios.get(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.posts}`);
+    return res.data;
+  } catch (error) {
+    handleApiError(error, 'fetchPosts');
+  }
 };
 
 export const fetchPost = async (id) => {
-  const res = await axios.get(`http://localhost:3000/api/v1/posts/${id}`);
-  return res.data;
+  try {
+    const res = await axios.get(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.posts}/${id}`);
+    return res.data;
+  } catch (error) {
+    handleApiError(error, 'fetchPost');
+  }
 }

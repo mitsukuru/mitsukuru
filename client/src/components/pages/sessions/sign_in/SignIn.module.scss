@@ -51,3 +51,39 @@ label {
 .githubSignIn {
   margin-top: 10px;
 }
+
+.loadingButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 310px;
+  height: 55px;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  animation: pulse 2s infinite;
+}
+
+.errorButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 310px;
+  height: 55px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
