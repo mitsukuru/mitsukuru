@@ -1,9 +1,9 @@
-import SignInGithubButton from "/src/assets/signIn_github_button.svg";
+import SignInGithubButton from "@/assets/signIn_github_button.svg";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import API_CONFIG from '../../../config/api';
-import ErrorMessage from '../../common/ErrorMessage';
-import useErrorHandler from '../../../hooks/useErrorHandler';
+import API_CONFIG from '@/config/api';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import useErrorHandler from '@/hooks/useErrorHandler';
 import styles from './SignIn.module.scss';
 
 const SignIn = () => {

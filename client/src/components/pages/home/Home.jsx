@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { fetchPosts } from '../../../api/postApi'
-import { fetchUsers } from '../../../api/userApi';
+import { fetchPosts } from '@/api/postApi'
+import { fetchUsers } from '@/api/userApi';
 import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
