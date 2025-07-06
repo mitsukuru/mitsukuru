@@ -15,8 +15,7 @@ const PostShow = () => {
         setLoading(true);
         setError(null);
         const fetchedPost = await fetchPost(id);
-        console.log('Fetched post data:', fetchedPost); // デバッグ用
-        setPost(fetchedPost.post); // 配列ではなく直接オブジェクトを取得
+        setPost(fetchedPost.post);
       } catch (error) {
         console.error("データの取得に失敗しました:", error);
         setError("投稿の取得に失敗しました");
@@ -61,8 +60,26 @@ const PostShow = () => {
         <p className={styles.postInfo}>更新日時: {new Date(post.updated_at).toLocaleString()}</p>
         <p className={styles.postInfo}>公開日時: {new Date(post.published_at).toLocaleString()}</p>
         <p className={styles.postInfo}>説明: {post.description}</p>
-        {post.image_url && (
-          <img className={styles.postImage} src={post.image_url} alt={post.title} />
+        {post.image_url?.url && 
+         !post.image_url.url.includes('/images/fallback/default.png') ? (
+          <div>
+            <h3>プロジェクト画像:</h3>
+            <img 
+              className={styles.postImage} 
+              src={`http://localhost:3000${post.image_url.url}`} 
+              alt={post.title}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+          </div>
+        ) : (
+          <div className={styles.noImage}>
+            <h3>プロジェクト画像:</h3>
+            <div className={styles.placeholderImage}>
+              <p>画像が設定されていません</p>
+            </div>
+          </div>
         )}
       </div>
     </div>

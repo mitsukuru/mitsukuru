@@ -26,3 +26,20 @@
   height: auto;
   border-radius: 4px;
 }
+
+.noImage {
+  margin-top: 20px;
+}
+
+.placeholderImage {
+  width: 100%;
+  height: 200px;
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 16px;
+}

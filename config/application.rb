@@ -23,6 +23,9 @@ module Mitsukuru
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    
+    # 静的ファイル配信を有効化（画像アップロード用）
+    config.public_file_server.enabled = true
 
     config.session_store :cookie_store, 
                       key: '_mitsukuru_session',
