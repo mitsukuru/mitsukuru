@@ -1,45 +1,222 @@
 .container {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  min-height: 100vh;
 }
 
-h1 {
-  text-align: center;
-  color: #333;
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #e2e8f0;
 }
 
-label {
-  display: block;
-  margin-bottom: 40px;
+.backButton {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  margin-right: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  color: #64748b;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    color: #334155;
+  }
 }
 
-input[type="text"],
-textarea,
-input[type="file"] {
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.form {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.formGroup {
+  margin-bottom: 32px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.labelIcon {
+  color: #64748b;
+}
+
+.input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
   box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: #374151;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &::placeholder {
+    color: #94a3b8;
+  }
 }
 
-.postSubmitButtonContainer {
+.textarea {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.2s ease;
+  background: white;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: #374151;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.fileInputContainer {
+  position: relative;
+}
+
+.fileInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fileInputLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 500;
+  
+  &:hover {
+    border-color: #374151;
+    background: #f1f5f9;
+    color: #374151;
+  }
+}
+
+.previewContainer {
+  margin-top: 24px;
+  padding: 24px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.previewTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.previewImage {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  
+  img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.submitContainer {
+  margin-top: 40px;
   display: flex;
   justify-content: center;
 }
 
-.postSubmitButton {
-  background-color: blue;
+.submitButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1f2937;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  max-width: 200px;
-  width: 100%;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    background: #111827;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
 }
 
-.postSubmitButton :hover {
-  background-color: darkblue;
+// レスポンシブデザイン
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .form {
+    padding: 24px;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 24px;
+  }
 }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './PostNew.module.scss';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; // Import axios
+import axios from 'axios';
+import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 
 const PostNew = () => {
   const formDataToSend = new FormData();
@@ -52,36 +53,101 @@ const PostNew = () => {
 
   return (
     <div className={styles.container}>
-      <h1>新規投稿</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          プロダクト名:
-          <input type="text" name="title" value={formData.title} onChange={handleChange} required placeholder="例）ミツクル" />
-        </label>
-        <label>
-          概要:
-          <input type="text" name="description" value={formData.description} onChange={handleChange} required placeholder="例）個人開発物の投稿アプリ" />
-        </label>
-        <label>
-          説明:
-          <textarea name="body" value={formData.body} onChange={handleChange} required></textarea>
-        </label>
-        <label>
-          プロダクト画像:
-          <input type="file" name="image_url" accept="image/*" onChange={handleChange} />
-        </label>
-        {imagePreview && ( // 画像プレビューを表示
-          <div>
-            <h3>画像プレビュー:</h3>
-            <img src={imagePreview} alt="Image Preview" style={{ maxWidth: '300px', maxHeight: '300px' }} />
+      <div className={styles.header}>
+        <button onClick={() => navigate('/home')} className={styles.backButton}>
+          <ArrowLeft size={20} />
+        </button>
+        <h1 className={styles.title}>新しいプロダクトを投稿</h1>
+      </div>
+      
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            <Type className={styles.labelIcon} size={20} />
+            プロダクト名
+          </label>
+          <input 
+            type="text" 
+            name="title" 
+            value={formData.title} 
+            onChange={handleChange} 
+            required 
+            placeholder="例）ミツクル" 
+            className={styles.input}
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            <FileText className={styles.labelIcon} size={20} />
+            概要
+          </label>
+          <input 
+            type="text" 
+            name="description" 
+            value={formData.description} 
+            onChange={handleChange} 
+            required 
+            placeholder="例）個人開発物の投稿アプリ" 
+            className={styles.input}
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            <FileText className={styles.labelIcon} size={20} />
+            詳細説明
+          </label>
+          <textarea 
+            name="body" 
+            value={formData.body} 
+            onChange={handleChange} 
+            required 
+            placeholder="プロダクトの詳細な説明を記入してください..." 
+            className={styles.textarea}
+            rows={6}
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            <ImageIcon className={styles.labelIcon} size={20} />
+            プロダクト画像
+          </label>
+          <div className={styles.fileInputContainer}>
+            <input 
+              type="file" 
+              name="image_url" 
+              accept="image/*" 
+              onChange={handleChange} 
+              className={styles.fileInput}
+              id="fileInput"
+            />
+            <label htmlFor="fileInput" className={styles.fileInputLabel}>
+              <Upload size={20} />
+              <span>画像を選択</span>
+            </label>
+          </div>
+        </div>
+        
+        {imagePreview && (
+          <div className={styles.previewContainer}>
+            <h3 className={styles.previewTitle}>プレビュー</h3>
+            <div className={styles.previewImage}>
+              <img src={imagePreview} alt="プレビュー" />
+            </div>
           </div>
         )}
-        <div className={styles.postSubmitButtonContainer}>
-          <button className={styles.postSubmitButton} type="submit">投稿</button>
+        
+        <div className={styles.submitContainer}>
+          <button type="submit" className={styles.submitButton}>
+            <Send size={20} />
+            投稿する
+          </button>
         </div>
       </form>
     </div>
   );
 }
 
-export default PostNew
+export default PostNew;
