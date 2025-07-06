@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchPost } from '../../../../api/postApi';
-import styles from './PostShow.module.scss'; // スタイルをインポート
+import { User, Clock, Camera } from 'lucide-react';
+import styles from './PostShow.module.scss';
 
 const PostShow = () => {
   const { id } = useParams();
@@ -51,36 +52,86 @@ const PostShow = () => {
   }
 
   return (
-    <div className={styles.postContainer}>
-      <div>
-        <h2 className={styles.postTitle}>{post.title}</h2>
-        <p className={styles.postContent}>{post.body}</p>
-        <p className={styles.postInfo}>ユーザー名: {post.user?.name}</p>
-        <p className={styles.postInfo}>作成日時: {new Date(post.created_at).toLocaleString()}</p>
-        <p className={styles.postInfo}>更新日時: {new Date(post.updated_at).toLocaleString()}</p>
-        <p className={styles.postInfo}>公開日時: {new Date(post.published_at).toLocaleString()}</p>
-        <p className={styles.postInfo}>説明: {post.description}</p>
-        {post.image_url?.url && 
-         !post.image_url.url.includes('/images/fallback/default.png') ? (
-          <div>
-            <h3>プロジェクト画像:</h3>
-            <img 
-              className={styles.postImage} 
-              src={`http://localhost:3000${post.image_url.url}`} 
-              alt={post.title}
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
-            />
-          </div>
-        ) : (
-          <div className={styles.noImage}>
-            <h3>プロジェクト画像:</h3>
-            <div className={styles.placeholderImage}>
-              <p>画像が設定されていません</p>
+    <div className={styles.container}>
+      <div className={styles.postCard}>
+        {/* ヘッダー部分 */}
+        <div className={styles.postHeader}>
+          <div className={styles.userInfo}>
+            {post.user?.remote_avatar_url ? (
+              <img 
+                src={post.user.remote_avatar_url} 
+                alt={`${post.user.name}のアバター`} 
+                className={styles.userAvatar}
+              />
+            ) : (
+              <div className={styles.defaultAvatar}>
+                <User size={24} />
+              </div>
+            )}
+            <div className={styles.userDetails}>
+              <h3 className={styles.userName}>{post.user?.name}</h3>
+              <p className={styles.publishDate}>
+                {new Date(post.published_at).toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
             </div>
           </div>
-        )}
+        </div>
+
+        {/* メインコンテンツ */}
+        <div className={styles.postContent}>
+          <h1 className={styles.postTitle}>{post.title}</h1>
+          <p className={styles.postDescription}>{post.description}</p>
+          
+          {/* 画像セクション */}
+          {post.image_url?.url && 
+           !post.image_url.url.includes('/images/fallback/default.png') ? (
+            <div className={styles.imageSection}>
+              <img 
+                className={styles.postImage} 
+                src={`http://localhost:3000${post.image_url.url}`} 
+                alt={post.title}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+          ) : (
+            <div className={styles.noImageSection}>
+              <div className={styles.placeholderImage}>
+                <Camera size={48} className={styles.cameraIcon} />
+                <p>画像が設定されていません</p>
+              </div>
+            </div>
+          )}
+
+          {/* 本文 */}
+          <div className={styles.bodySection}>
+            <h2 className={styles.sectionTitle}>プロジェクト詳細</h2>
+            <div className={styles.postBody}>
+              {post.body.split('\n').map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
+          </div>
+
+          {/* メタ情報 */}
+          <div className={styles.metaSection}>
+            <div className={styles.metaItem}>
+              <Clock size={16} />
+              <span>作成日: {new Date(post.created_at).toLocaleDateString('ja-JP')}</span>
+            </div>
+            {post.updated_at !== post.created_at && (
+              <div className={styles.metaItem}>
+                <Clock size={16} />
+                <span>更新日: {new Date(post.updated_at).toLocaleDateString('ja-JP')}</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
