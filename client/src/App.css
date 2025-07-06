@@ -164,6 +164,7 @@
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   min-width: 180px;
+  width: 100%;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
@@ -185,11 +186,14 @@
   color: #374151;
   border: none;
   background: none;
-  width: 100%;
   text-align: left;
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.15s;
+}
+
+.userDropdown button {
+  width: 100%;
 }
 
 .userDropdown a:hover,
