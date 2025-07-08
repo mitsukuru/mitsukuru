@@ -7,6 +7,8 @@ Rails.application.routes.draw do
       post "/callback" => "oauths#callback"
       get "/callback" => "oauths#callback"
       get "/:provider" => "oauths#oauth", as: :auth_at_provider
+      get "/auth/status" => "auth#status"
+      post "/auth/logout" => "auth#logout"
     end
   end
 end

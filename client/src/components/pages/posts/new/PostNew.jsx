@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './PostNew.module.scss';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import { createPost } from '@/api/postApi';
 import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft } from 'lucide-react';
+import useAuth from '@/hooks/useAuth';
 
 const PostNew = () => {
-  const formDataToSend = new FormData();
   const navigate = useNavigate();
+  const { isAuthenticated, user, refreshAuth } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -14,6 +15,22 @@ const PostNew = () => {
     image_url: null,
   }); 
   const [imagePreview, setImagePreview] = useState(null); // 画像プレビュー用の状態を追加
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!isAuthenticated) {
+        // サーバーの認証状態を確認
+        try {
+          await refreshAuth();
+        } catch (error) {
+          console.error('認証状態の確認に失敗:', error);
+          navigate('/sign_in');
+        }
+      }
+    };
+    
+    checkAuth();
+  }, [isAuthenticated, navigate, refreshAuth]);
 
   const handleChange = ({ target: { name, value, files } }) => {
     setFormData((prev) => ({
@@ -31,23 +48,37 @@ const PostNew = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    Object.entries(formData).forEach(([key, value]) => formDataToSend.append(key, value));
+    
+    if (!isAuthenticated || !user) {
+      alert('ログインが必要です');
+      navigate('/sign_in');
+      return;
+    }
+    
+    // FormDataを作成
+    const formDataToSend = new FormData();
+    formDataToSend.append('post[title]', formData.title);
+    formDataToSend.append('post[description]', formData.description);
+    formDataToSend.append('post[body]', formData.body);
+    if (formData.image_url) {
+      formDataToSend.append('post[image_url]', formData.image_url);
+    }
+    
+    // ユーザー情報を追加
+    formDataToSend.append('user_data[id]', user.id);
+    formDataToSend.append('user_data[name]', user.name);
+    formDataToSend.append('user_data[email]', user.email);
 
     try {
-      axios.post('http://localhost:3000/api/v1/posts/', { post: formData }, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-        .then((response) => {
-          console.log(response.data);
-          navigate("/home");
-        })
-        .catch((error) => {
-          console.error("エラーが発生しました:", error); // エラーハンドリングを追加
-        });
+      const response = await createPost(formDataToSend);
+      console.log('投稿成功:', response);
+      navigate("/home");
     } catch (error) {
-      console.error('エラー:', error.response ? error.response.data : error.message); // エラーメッセージを詳細に表示
+      console.error('投稿エラー:', error.response ? error.response.data : error.message);
+      if (error.response?.status === 401) {
+        alert('認証に失敗しました。再度ログインしてください。');
+        navigate('/sign_in');
+      }
     }
   };
 

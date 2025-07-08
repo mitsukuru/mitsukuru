@@ -52,6 +52,7 @@ class Api::V1::OauthsController < ApplicationController
     begin
       if @user = login_from(provider)
         # 既存ユーザーのログイン成功
+        session[:user_id] = @user.id
         Rails.logger.info "OAuth認証成功: ユーザーID #{@user.id} (#{provider})"
         Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
         # LocalStorage用のユーザー情報をエンコード
@@ -69,7 +70,7 @@ class Api::V1::OauthsController < ApplicationController
         @user = create_from(provider)
         
         if @user&.persisted?
-          auto_login(@user)
+          session[:user_id] = @user.id
           Rails.logger.info "OAuth新規ユーザー作成成功: ユーザーID #{@user.id} (#{provider})"
           Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
           # LocalStorage用のユーザー情報をエンコード

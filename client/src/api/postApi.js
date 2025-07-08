@@ -18,4 +18,18 @@ export const fetchPost = async (id) => {
   } catch (error) {
     handleApiError(error, 'fetchPost');
   }
-}
+};
+
+export const createPost = async (formData) => {
+  try {
+    const res = await axios.post(API_CONFIG.endpoints.posts, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  } catch (error) {
+    handleApiError(error, 'createPost');
+    throw error;
+  }
+};
