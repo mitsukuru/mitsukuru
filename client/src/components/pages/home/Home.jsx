@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchPosts } from '@/api/postApi'
 import { fetchUsers } from '@/api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye } from 'lucide-react';
+import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye, Image as ImageIcon } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
@@ -10,32 +10,67 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const { refreshAuth } = useAuth();
-  const [currentImages, setCurrentImages] = useState({});
   const [likes, setLikes] = useState({});
   const [likesCount, setLikesCount] = useState(0);
   const [viewCount, setViewCount] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState({});
 
-  // TODO: S3から取得する形に後々変更
-  const images = [
-    '/src/assets/mitsukuru-removebg-preview.png',
-    '/src/assets/test_image2.png',
-    '/src/assets/test_image1.png',
-  ];
-
-  // 画像を前送りにする関数
-  const nextImage = (postId) => {
-    setCurrentImages((prev) => ({
+  // 画像スライダー関数
+  const nextImage = (postId, maxIndex) => {
+    setCurrentImageIndex(prev => ({
       ...prev,
-      [postId]: (prev[postId] !== undefined ? (prev[postId] + 1) % images.length : 1)
+      [postId]: (prev[postId] || 0) < maxIndex - 1 ? (prev[postId] || 0) + 1 : 0
     }));
   };
 
-  // 画像を後ろ送りにする関数
-  const prevImage = (postId) => {
-    setCurrentImages((prev) => ({
+  const prevImage = (postId, maxIndex) => {
+    setCurrentImageIndex(prev => ({
       ...prev,
-      [postId]: (prev[postId] !== undefined ? (prev[postId] - 1 + images.length) % images.length : images.length - 1)
+      [postId]: (prev[postId] || 0) > 0 ? (prev[postId] || 0) - 1 : maxIndex - 1
     }));
+  };
+
+  const goToImage = (postId, index) => {
+    setCurrentImageIndex(prev => ({
+      ...prev,
+      [postId]: index
+    }));
+  };
+
+  // 投稿の画像を配列として取得
+  const getPostImages = (post) => {
+    const images = [];
+    
+    // all_imagesメソッドから画像を取得
+    if (post.all_images && post.all_images.length > 0) {
+      post.all_images.forEach(img => {
+        let imageUrl = null;
+        
+        // 画像URLを取得（構造に応じて）
+        if (img && img.url) {
+          imageUrl = img.url;
+        } else if (img && img.table && img.table.url) {
+          imageUrl = img.table.url;
+        }
+        
+        if (imageUrl) {
+          // 絶対URLの場合はそのまま、相対URLの場合はlocalhost:3000を付加
+          if (imageUrl.startsWith('http')) {
+            images.push(imageUrl);
+          } else {
+            images.push(`http://localhost:3000${imageUrl}`);
+          }
+        }
+      });
+    } else {
+      // フォールバック: 従来のimage_urlを使用
+      if (post.image_url && post.image_url.url) {
+        images.push(`http://localhost:3000${post.image_url.url}`);
+      }
+    }
+    
+    console.log('Post images for', post.id, ':', images); // デバッグ用
+    return images;
   };
 
   // いいねをトグルする関数
@@ -131,25 +166,68 @@ const Home = () => {
                 </div>
 
                 <div className={styles.imageGallery}>
-                  <img
-                    src={images[currentImages[post.id] || 0]}
-                    alt={`アプリの画面 ${currentImages[post.id] + 1 || 1}`}
-                    className={styles.galleryImage}
-                  />
-                  <button onClick={() => prevImage(post.id)} className={styles.galleryButton + ' ' + styles.prevButton}>
-                    <ChevronLeft />
-                  </button>
-                  <button onClick={() => nextImage(post.id)} className={styles.galleryButton + ' ' + styles.nextButton}>
-                    <ChevronRight />
-                  </button>
-                  <div className={styles.imageIndicators}>
-                    {images.map((_, index) => (
-                      <div
-                        key={index}
-                        className={`${styles.indicator} ${index === (currentImages[post.id] || 0) ? styles.active : ''}`}
-                      />
-                    ))}
-                  </div>
+                  {(() => {
+                    const images = getPostImages(post);
+                    const currentIndex = currentImageIndex[post.id] || 0;
+                    
+                    if (images.length === 0) {
+                      return (
+                        <div className={styles.noImage}>
+                          <ImageIcon size={64} color="#cbd5e1" />
+                          <p>画像なし</p>
+                        </div>
+                      );
+                    }
+                    
+                    return (
+                      <div className={styles.slider}>
+                        <div className={styles.imageContainer}>
+                          <img
+                            src={images[currentIndex]}
+                            alt={`${post.title}の画像 ${currentIndex + 1}`}
+                            className={styles.galleryImage}
+                          />
+                          
+                          {images.length > 1 && (
+                            <>
+                              <button 
+                                onClick={() => prevImage(post.id, images.length)}
+                                className={`${styles.sliderButton} ${styles.prevButton}`}
+                                aria-label="前の画像"
+                              >
+                                <ChevronLeft size={24} />
+                              </button>
+                              <button 
+                                onClick={() => nextImage(post.id, images.length)}
+                                className={`${styles.sliderButton} ${styles.nextButton}`}
+                                aria-label="次の画像"
+                              >
+                                <ChevronRight size={24} />
+                              </button>
+                              
+                              <div className={styles.imageCounter}>
+                                {currentIndex + 1} / {images.length}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        
+                        {images.length > 1 && (
+                          <div className={styles.thumbnails}>
+                            {images.map((image, index) => (
+                              <button
+                                key={index}
+                                onClick={() => goToImage(post.id, index)}
+                                className={`${styles.thumbnail} ${index === currentIndex ? styles.active : ''}`}
+                              >
+                                <img src={image} alt={`サムネイル ${index + 1}`} />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className={styles.postBottoms}>
                   <div className={styles.likeContainer}>
