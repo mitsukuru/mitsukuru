@@ -8,14 +8,20 @@ class Api::V1::PostsController < ApplicationController
     posts = Post.includes(:user).order(published_at: :desc)
     render json: { 
       status: 200, 
-      posts: posts.as_json(include: { user: { only: [:id, :name, :remote_avatar_url] } })
+      posts: posts.as_json(
+        include: { user: { only: [:id, :name, :remote_avatar_url] } },
+        methods: [:all_images]
+      )
     }
   end
 
   def show
     render json: { 
       status: 200, 
-      post: @post.as_json(include: { user: { only: [:id, :name, :remote_avatar_url] } })
+      post: @post.as_json(
+        include: { user: { only: [:id, :name, :remote_avatar_url] } },
+        methods: [:all_images]
+      )
     }
   end
 
@@ -52,10 +58,41 @@ class Api::V1::PostsController < ApplicationController
     post = user.posts.build(permit_params)
     post.published_at = Time.zone.now
     
+    # 最初にメイン投稿を保存
     if post.save
+      # 追加画像の処理（投稿保存後にIDが確定してから）
+      if params[:post][:additional_image_files].present?
+        additional_paths = []
+        params[:post][:additional_image_files].each_with_index do |file, index|
+          # ファイル名を一意にするためにタイムスタンプとインデックスを使用
+          timestamp = Time.now.to_i
+          filename = "#{timestamp}_#{index}_#{file.original_filename}"
+          
+          # 保存先ディレクトリを作成
+          upload_dir = Rails.root.join('public', 'uploads', 'post', 'additional_images', post.id.to_s)
+          FileUtils.mkdir_p(upload_dir)
+          
+          # ファイルを保存
+          file_path = upload_dir.join(filename)
+          File.open(file_path, 'wb') do |f|
+            f.write(file.read)
+          end
+          
+          # 相対パスを保存
+          relative_path = "/uploads/post/additional_images/#{post.id}/#{filename}"
+          additional_paths << relative_path
+        end
+        
+        # 追加画像のパスを更新
+        post.update(additional_images: additional_paths)
+      end
+      
       render json: { 
         status: 201, 
-        post: post.as_json(include: { user: { only: [:id, :name, :remote_avatar_url] } })
+        post: post.as_json(
+          include: { user: { only: [:id, :name, :remote_avatar_url] } },
+          methods: [:all_images]
+        )
       }, status: :created
     else
       render json: { 

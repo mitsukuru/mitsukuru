@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_05_064538) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_08_161422) do
   create_table "authentications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "provider", null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_05_064538) do
     t.text "description"
     t.string "image_url"
     t.datetime "published_at"
+    t.text "additional_images"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
