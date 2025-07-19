@@ -1,6 +1,7 @@
 // client/src/components/features/Notification.jsx
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
+import styles from './Notification.module.scss';
 
 const Notification = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -14,49 +15,28 @@ const Notification = () => {
   const [notificationCount] = useState(notifications.length);
 
   return (
-    <div>
-      <div onClick={() => setIsClicked(!isClicked)} style={{ height: '30px'}}>
-        <Bell className="iconButton" />
+    <div className={styles.notificationContainer}>
+      <div className={styles.notificationButton}>
+        <Bell size={20} />
         {notificationCount > 0 && (
-          <span className="notificationCount" style={{ 
-            position: 'relative', 
-            top: '-20px', 
-            right: '5px', 
-            backgroundColor: 'red', 
-            borderRadius: '50%', 
-            color: 'white', 
-            padding: '2px 4px', 
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }}>
+          <span className={styles.notificationBadge}>
             {notificationCount}
           </span>
         )}
       </div>
-      {isClicked && ( // クリック時に通知内容を表示
-        <div className="notificationDropdown" style={{ 
-          position: 'absolute', 
-          right: '180px',
-          backgroundColor: 'white', 
-          border: '1px solid #ccc', 
-          borderRadius: '4px', 
-          zIndex: 1000,
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
-        }}>
-          {notifications.map((notification, index) => (
-            <div key={index} style={{ 
-              padding: '10px', 
-              transition: 'background-color 0.3s', 
-              fontSize: '14px'
-            }} 
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'} // ホバー時の背景色
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'} // ホバー解除時の背景色
-            >
+      <div className={styles.notificationDropdown}>
+        {notifications.length > 0 ? (
+          notifications.map((notification, index) => (
+            <div key={index} className={styles.notificationItem}>
               {notification}
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        ) : (
+          <div className={styles.emptyState}>
+            通知はありません
+          </div>
+        )}
+      </div>
     </div>
   )
 }

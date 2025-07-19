@@ -1,4 +1,5 @@
 import '@/App.css';
+import styles from './Header.module.scss';
 import logo from '@/assets/mitsukuru-removebg-preview.png';
 import { Link } from 'react-router-dom';
 import { SquarePen, User } from 'lucide-react';
@@ -31,31 +32,41 @@ const Header = () => {
           {isAuthenticated && user ? (
             <>
               <li>
-                <Link to='/posts/new' title="新規投稿">
-                  <SquarePen className="iconButton" />
+                <Link to='/posts/new' title="新規投稿" className={styles.headerIconButton}>
+                  <div className={styles.iconWrapper}>
+                    <SquarePen size={20} />
+                  </div>
                 </Link>
               </li>
               <li>
-                <Notification />
+                <div className={styles.headerIconButton}>
+                  <div className={styles.iconWrapper}>
+                    <Notification />
+                  </div>
+                </div>
               </li>
               <li>
-                <DirectMessage />
+                <div className={styles.headerIconButton}>
+                  <div className={styles.iconWrapper}>
+                    <DirectMessage />
+                  </div>
+                </div>
               </li>
-              <li className="userProfile">
+              <li className={styles.userProfile}>
                 {user.remote_avatar_url ? (
                   <img 
                     src={user.remote_avatar_url} 
                     alt={`${user.name}のアバター`} 
-                    className='avatarIcon' 
+                    className={styles.avatarIcon} 
                     title={user.name}
                   />
                 ) : (
-                  <User className="avatarIcon" title={user.name} />
+                  <User className={styles.avatarIcon} title={user.name} />
                 )}
-                <div className="userDropdown">
+                <div className={styles.userDropdown}>
                   <Link to={`/users/${user.id}`}>プロフィール</Link>
                   <Link to="/settings">設定</Link>
-                  <button onClick={logout} className="logoutButton">
+                  <button onClick={logout} className={styles.logoutButton}>
                     ログアウト
                   </button>
                 </div>

@@ -143,10 +143,10 @@ const Home = () => {
                       <img
                         src={users.find(user => user.id === post.user_id)?.remote_avatar_url}
                         alt="ユーザーのアバター"
-                        className={styles.avatarIcon}
+                        className={styles.userAvatarIcon}
                       />
                     ) : (
-                      <User className={styles.avatarIcon} />
+                      <User className={styles.userAvatarIcon} />
                     )}
                   </div>
                   <div>

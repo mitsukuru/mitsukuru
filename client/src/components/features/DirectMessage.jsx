@@ -3,7 +3,7 @@ import { MessageCircle } from 'lucide-react';
 
 const DirectMessage = () => {
   return (
-    <MessageCircle className="iconButton"/>
+    <MessageCircle size={20} />
   )
 }
 
