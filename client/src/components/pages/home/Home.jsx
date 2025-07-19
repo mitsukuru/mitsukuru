@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { fetchPosts } from '@/api/postApi'
 import { fetchUsers } from '@/api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye, Image as ImageIcon } from 'lucide-react';
+import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye, Image as ImageIcon, Filter, Search, RotateCcw } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
@@ -14,6 +14,11 @@ const Home = () => {
   const [likesCount, setLikesCount] = useState(0);
   const [viewCount, setViewCount] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+  
+  // フィルター状態
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [filterUser, setFilterUser] = useState('all');
 
   // 画像スライダー関数
   const nextImage = (postId, maxIndex) => {
@@ -71,6 +76,49 @@ const Home = () => {
     
     console.log('Post images for', post.id, ':', images); // デバッグ用
     return images;
+  };
+
+  // フィルタリングとソート機能
+  const filteredAndSortedPosts = useMemo(() => {
+    let filtered = posts;
+
+    // 検索フィルター
+    if (searchTerm) {
+      filtered = filtered.filter(post => 
+        post.app_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // ユーザーフィルター
+    if (filterUser !== 'all') {
+      filtered = filtered.filter(post => post.user_id === parseInt(filterUser));
+    }
+
+    // ソート
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.created_at) - new Date(a.created_at);
+        case 'oldest':
+          return new Date(a.created_at) - new Date(b.created_at);
+        case 'name_asc':
+          return (a.app_name || '').localeCompare(b.app_name || '');
+        case 'name_desc':
+          return (b.app_name || '').localeCompare(a.app_name || '');
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [posts, searchTerm, sortBy, filterUser]);
+
+  // フィルターをクリア
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSortBy('newest');
+    setFilterUser('all');
   };
 
   // いいねをトグルする関数
@@ -132,9 +180,82 @@ const Home = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.col3}></div>
+        {/* 左サイドバー - フィルター機能 */}
+        <div className={styles.sidebar}>
+          <div className={styles.filterContainer}>
+            <h3 className={styles.filterTitle}>
+              <Filter size={20} />
+              投稿を絞り込み
+            </h3>
+            
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>検索</label>
+              <div style={{ position: 'relative' }}>
+                <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                <input
+                  type="text"
+                  placeholder="アプリ名や説明で検索..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={styles.searchInput}
+                  style={{ paddingLeft: '36px' }}
+                />
+              </div>
+            </div>
+            
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>並び順</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className={styles.filterSelect}
+              >
+                <option value="newest">新着順</option>
+                <option value="oldest">古い順</option>
+                <option value="name_asc">名前順 (A-Z)</option>
+                <option value="name_desc">名前順 (Z-A)</option>
+              </select>
+            </div>
+            
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>投稿者</label>
+              <select
+                value={filterUser}
+                onChange={(e) => setFilterUser(e.target.value)}
+                className={styles.filterSelect}
+              >
+                <option value="all">すべて</option>
+                {users.map(user => (
+                  <option key={user.id} value={user.id}>
+                    {user.name || `ユーザー${user.id}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <button
+              onClick={clearFilters}
+              className={styles.clearButton}
+              title="フィルターをクリア"
+            >
+              <RotateCcw size={16} />
+              フィルターをクリア
+            </button>
+            
+            <div className={styles.resultCount}>
+              <Eye size={16} />
+              {filteredAndSortedPosts.length}件の投稿
+              {searchTerm && (
+                <div style={{ fontSize: '0.75rem', marginTop: '4px', color: '#94a3b8' }}>
+                  「{searchTerm}」で検索中
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className={styles.postList}>
-          {posts.map((post, index) =>
+          {filteredAndSortedPosts.map((post, index) =>
             <div key={index} className={styles.appPost}>
               <div className={styles.postContent}>
                 <div className={styles.userInfo}>
@@ -245,7 +366,10 @@ const Home = () => {
             </div>
           )}
         </div>
-        <div className={styles.col3}></div>
+        {/* 右サイドバー */}
+        <div className={styles.rightSidebar}>
+          {/* 将来的に他のコンテンツを追加可能 */}
+        </div>
       </div>
     </>
   );
