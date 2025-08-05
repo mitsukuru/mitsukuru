@@ -55,16 +55,25 @@ class Api::V1::OauthsController < ApplicationController
         session[:user_id] = @user.id
         Rails.logger.info "OAuth認証成功: ユーザーID #{@user.id} (#{provider})"
         Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
+        Rails.logger.info "オンボーディング状況: #{@user.onboarding_completed}"
+        
         # LocalStorage用のユーザー情報をエンコード
         user_data = {
           id: @user.id,
           name: @user.name,
           email: @user.email,
-          remote_avatar_url: @user.remote_avatar_url
+          remote_avatar_url: @user.remote_avatar_url,
+          onboarding_completed: @user.onboarding_completed
         }.to_json
         encoded_user = Base64.strict_encode64(user_data)
         base_url = Rails.application.credentials.frontend[:development][:base_url]
-        redirect_to "#{base_url}/auth/loading?auth_success=#{encoded_user}", allow_other_host: true
+        
+        # オンボーディング完了状況でリダイレクト先を決定
+        if @user.onboarding_completed
+          redirect_to "#{base_url}/auth/loading?auth_success=#{encoded_user}", allow_other_host: true
+        else
+          redirect_to "#{base_url}/onboarding?user=#{encoded_user}", allow_other_host: true
+        end
       else
         # 新規ユーザー作成
         @user = create_from(provider)
@@ -78,23 +87,29 @@ class Api::V1::OauthsController < ApplicationController
             id: @user.id,
             name: @user.name,
             email: @user.email,
-            remote_avatar_url: @user.remote_avatar_url
+            remote_avatar_url: @user.remote_avatar_url,
+            onboarding_completed: @user.onboarding_completed
           }.to_json
           encoded_user = Base64.strict_encode64(user_data)
           base_url = Rails.application.credentials.frontend[:development][:base_url]
-          redirect_to "#{base_url}/auth/loading?auth_success=#{encoded_user}", allow_other_host: true
+          
+          # 新規ユーザーは必ずオンボーディングに誘導
+          redirect_to "#{base_url}/onboarding?user=#{encoded_user}", allow_other_host: true
         else
           handle_oauth_error("ユーザー作成に失敗しました", provider, @user&.errors&.full_messages)
         end
       end
-    rescue Sorcery::External::Providers::ExternalProvider::UnauthorizedError => e
-      handle_oauth_error("OAuth認証が拒否されました", provider, [e.message])
-    rescue Sorcery::External::Providers::ExternalProvider::MissingEmailError => e
-      handle_oauth_error("メールアドレスの取得に失敗しました", provider, [e.message])
+    rescue StandardError => e
+      case e.class.name
+      when 'Sorcery::External::Providers::ExternalProvider::UnauthorizedError'
+        handle_oauth_error("OAuth認証が拒否されました", provider, [e.message])
+      when 'Sorcery::External::Providers::ExternalProvider::MissingEmailError'
+        handle_oauth_error("メールアドレスの取得に失敗しました", provider, [e.message])
+      else
+        handle_oauth_error("予期しないエラーが発生しました", provider, [e.message])
+      end
     rescue ActiveRecord::RecordInvalid => e
       handle_oauth_error("ユーザーデータの保存に失敗しました", provider, e.record.errors.full_messages)
-    rescue StandardError => e
-      handle_oauth_error("予期しないエラーが発生しました", provider, [e.message])
     end
   end
 

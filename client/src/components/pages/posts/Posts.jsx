@@ -41,8 +41,6 @@ const Posts = () => {
     fetchData();
   }, []);
 
-  const userPosts = posts.filter(post => users.some(user => user.id === post.user_id));
-  
   return (
     <div className={styles.appPost}>
       <div className={styles.postContent}>

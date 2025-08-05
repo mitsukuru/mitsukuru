@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_08_161422) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_23_153252) do
   create_table "authentications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "provider", null: false
@@ -30,6 +30,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_08_161422) do
     t.string "image_url"
     t.datetime "published_at"
     t.text "additional_images"
+    t.string "repository_name"
+    t.string "repository_url"
+    t.text "repository_description"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -44,6 +47,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_08_161422) do
     t.datetime "updated_at", null: false
     t.string "remote_avatar_url"
     t.string "name"
+    t.boolean "onboarding_completed", default: false
+    t.datetime "first_login_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

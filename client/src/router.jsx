@@ -3,6 +3,7 @@ import Header from "./components/layouts/Header"
 import Top from "./components/pages/Top"
 import SignIn from "./components/pages/sessions/sign_in/SignIn"
 import AuthLoading from "./components/pages/auth/AuthLoading"
+import Onboarding from "./components/pages/onboarding/Onboarding"
 import Home from "./components/pages/home/Home"
 import Users from "./components/pages/users/Users"
 import Posts from "./components/pages/posts/Posts"
@@ -31,6 +32,11 @@ const Router = () => {
                   </ProtectedRoute>
                 } />
                 <Route path="/auth/loading" element={<AuthLoading />} />
+                <Route path="/onboarding" element={
+                  <ProtectedRoute requireAuth={false}>
+                    <Onboarding />
+                  </ProtectedRoute>
+                } />
                 <Route path="/home" element={
                   <ProtectedRoute requireAuth={true}>
                     <Header />

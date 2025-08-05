@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       get "/:provider" => "oauths#oauth", as: :auth_at_provider
       get "/auth/status" => "auth#status"
       post "/auth/logout" => "auth#logout"
+      get "/onboarding/repositories" => "onboarding#get_repositories"
+      post "/onboarding/complete" => "onboarding#complete_onboarding"
     end
   end
 end
