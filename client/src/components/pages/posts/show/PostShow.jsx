@@ -102,8 +102,11 @@ const PostShow = () => {
           ) : (
             <div className={styles.noImageSection}>
               <div className={styles.placeholderImage}>
-                <Camera size={48} className={styles.cameraIcon} />
-                <p>画像が設定されていません</p>
+                <div className={styles.noImageIcon}>
+                  📸
+                </div>
+                <p className={styles.noImageText}>まだ画像がないよぉ〜</p>
+                <p className={styles.noImageSubText}>素敵な画像を追加してみてね！✨</p>
               </div>
             </div>
           )}
