@@ -9,6 +9,7 @@ import Users from "./components/pages/users/Users"
 import Posts from "./components/pages/posts/Posts"
 import PostNew from "./components/pages/posts/new/PostNew"
 import PostShow from "./components/pages/posts/show/PostShow"
+import Settings from "./components/pages/settings/Settings"
 import ProtectedRoute from "./components/common/ProtectedRoute"
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -65,6 +66,12 @@ const Router = () => {
                   <ProtectedRoute requireAuth={true}>
                     <Header />
                     <PostShow />
+                  </ProtectedRoute>
+                }></Route>
+                <Route path="/settings" element={
+                  <ProtectedRoute requireAuth={true}>
+                    <Header />
+                    <Settings />
                   </ProtectedRoute>
                 }></Route>
               </Routes>
