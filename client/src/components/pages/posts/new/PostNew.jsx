@@ -116,7 +116,7 @@ const PostNew = () => {
     try {
       const response = await createPost(formDataToSend);
       console.log('投稿成功:', response);
-      navigate("/home");
+      navigate("/home", { state: { showSuccessModal: true } });
     } catch (error) {
       console.error('投稿エラー:', error.response ? error.response.data : error.message);
       if (error.response?.status === 401) {

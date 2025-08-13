@@ -3,17 +3,20 @@ import { fetchPosts } from '@/api/postApi'
 import { fetchUsers } from '@/api/userApi';
 import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye, Image as ImageIcon, Filter, Search, RotateCcw } from 'lucide-react';
 import styles from './Home.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
+import SuccessModal from '@/components/common/SuccessModal';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const { refreshAuth } = useAuth();
+  const location = useLocation();
   const [likes, setLikes] = useState({});
   const [likesCount, setLikesCount] = useState(0);
   const [viewCount, setViewCount] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   
   // フィルター状態
   const [searchTerm, setSearchTerm] = useState('');
@@ -177,8 +180,22 @@ const Home = () => {
     refreshAuth();
   }, []);
 
+  // 投稿成功後のモーダル表示処理
+  useEffect(() => {
+    if (location.state?.showSuccessModal) {
+      setShowSuccessModal(true);
+      // 状態をクリアして再表示を防ぐ
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   return (
     <>
+      <SuccessModal 
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message="投稿が完了しました！"
+      />
       <div className={styles.container}>
         {/* 左サイドバー - フィルター機能 */}
         <div className={styles.sidebar}>
