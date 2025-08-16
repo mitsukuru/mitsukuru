@@ -31,7 +31,8 @@ module Mitsukuru
                       key: '_mitsukuru_session',
                       same_site: :lax,
                       secure: Rails.env.production?,
-                      domain: Rails.env.development? ? 'localhost' : nil
+                      domain: Rails.env.development? ? 'localhost' : nil,
+                      httponly: false
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
   end

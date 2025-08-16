@@ -6,7 +6,6 @@ import { SquarePen, User } from 'lucide-react';
 import Notification from '@/components/features/Notification';
 import DirectMessage from '@/components/features/DirectMessage';
 import useAuth from '@/hooks/useAuth';
-import { useEffect } from 'react';
 
 const Header = () => {
   const { user, isAuthenticated, loading, logout } = useAuth();
