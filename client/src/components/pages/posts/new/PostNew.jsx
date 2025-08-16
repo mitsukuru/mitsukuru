@@ -137,12 +137,13 @@ const PostNew = () => {
       
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
-          <label className={styles.label}>
-            <Type className={styles.labelIcon} size={20} />
+          <label htmlFor="title" className={styles.label}>
+            <Type className={styles.labelIcon} size={16} />
             プロダクト名
           </label>
           <input 
             type="text" 
+            id="title"
             name="title" 
             value={formData.title} 
             onChange={handleChange} 
@@ -153,12 +154,13 @@ const PostNew = () => {
         </div>
         
         <div className={styles.formGroup}>
-          <label className={styles.label}>
-            <FileText className={styles.labelIcon} size={20} />
+          <label htmlFor="description" className={styles.label}>
+            <FileText className={styles.labelIcon} size={16} />
             概要
           </label>
           <input 
             type="text" 
+            id="description"
             name="description" 
             value={formData.description} 
             onChange={handleChange} 
@@ -169,11 +171,12 @@ const PostNew = () => {
         </div>
         
         <div className={styles.formGroup}>
-          <label className={styles.label}>
-            <FileText className={styles.labelIcon} size={20} />
+          <label htmlFor="body" className={styles.label}>
+            <FileText className={styles.labelIcon} size={16} />
             詳細説明
           </label>
           <textarea 
+            id="body"
             name="body" 
             value={formData.body} 
             onChange={handleChange} 
@@ -186,7 +189,7 @@ const PostNew = () => {
         
         <div className={styles.formGroup}>
           <label className={styles.label}>
-            <ImageIcon className={styles.labelIcon} size={20} />
+            <ImageIcon className={styles.labelIcon} size={16} />
             プロダクト画像
           </label>
           <div className={styles.fileInputContainer}>
@@ -200,7 +203,7 @@ const PostNew = () => {
               multiple
             />
             <label htmlFor="fileInput" className={styles.fileInputLabel}>
-              <Upload size={20} />
+              <Upload size={16} />
               <span>画像を選択（最大6枚）</span>
             </label>
           </div>
@@ -276,7 +279,7 @@ const PostNew = () => {
         
         <div className={styles.submitContainer}>
           <button type="submit" className={styles.submitButton}>
-            <Send size={20} />
+            <Send size={16} />
             投稿する
           </button>
         </div>
