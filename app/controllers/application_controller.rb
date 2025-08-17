@@ -19,11 +19,22 @@ class ApplicationController < ActionController::Base
     # First try token-based authentication from headers
     if request.headers['Authorization'].present?
       token = request.headers['Authorization'].gsub(/Bearer\s+/, '')
-      User.find_by_api_token(token)
-    # Fallback to session-based authentication
-    elsif session[:user_id].present?
-      User.find_by(id: session[:user_id])
+      Rails.logger.info "Token authentication attempt: #{token[0..10]}..."
+      user = User.find_by_api_token(token)
+      Rails.logger.info "Token auth result: #{user&.name || 'NOT FOUND'}"
+      return user if user
     end
+    
+    # Fallback to session-based authentication
+    if session[:user_id].present?
+      Rails.logger.info "Session authentication attempt: user_id=#{session[:user_id]}"
+      user = User.find_by(id: session[:user_id])
+      Rails.logger.info "Session auth result: #{user&.name || 'NOT FOUND'}"
+      return user
+    end
+    
+    Rails.logger.info "No authentication method available"
+    nil
   end
 
   def logged_in?

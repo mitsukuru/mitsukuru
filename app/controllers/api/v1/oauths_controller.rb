@@ -146,20 +146,49 @@ class Api::V1::OauthsController < ApplicationController
     
     begin
       # Sorceryの @user_hash にアクセストークンが含まれている
+      Rails.logger.info "User hash: #{@user_hash.inspect}"
       Rails.logger.info "User hash keys: #{@user_hash&.keys}"
       Rails.logger.info "Access token available: #{@user_hash&.dig('credentials', 'token')}"
       
       # GitHub認証レコードを取得
       auth = user.authentications.find_by(provider: provider)
       
-      if auth && @user_hash&.dig('credentials', 'token')
-        access_token = @user_hash['credentials']['token']
+      # Try to find the access token in different possible locations
+      access_token = nil
+      if @user_hash.present?
+        access_token = @user_hash.dig('credentials', 'token') ||
+                      @user_hash[:token] ||
+                      @user_hash['token'] ||
+                      @user_hash[:access_token] ||
+                      @user_hash['access_token'] ||
+                      @user_hash[:oauth_token] ||
+                      @user_hash['oauth_token']
+      end
+      
+      if auth && access_token.present?
         auth.update!(access_token: access_token)
         Rails.logger.info "GitHubアクセストークンを保存: user_id=#{user.id}, token_length=#{access_token.length}"
       else
         Rails.logger.warn "GitHub認証またはアクセストークンが見つかりません: user_id=#{user.id}"
         Rails.logger.warn "Auth record: #{auth.present?}"
+        Rails.logger.warn "Auth record details: #{auth.inspect}"
         Rails.logger.warn "User hash: #{@user_hash.present?}"
+        Rails.logger.warn "User hash structure: #{@user_hash.inspect}"
+        
+        # Try alternative ways to get the token
+        if @user_hash.present?
+          Rails.logger.warn "Checking for token in different locations:"
+          Rails.logger.warn "  token: #{@user_hash['token']}"
+          Rails.logger.warn "  access_token: #{@user_hash['access_token']}"
+          Rails.logger.warn "  oauth_token: #{@user_hash['oauth_token']}"
+          Rails.logger.warn "  credentials: #{@user_hash['credentials']}"
+        end
+        
+        # As a fallback, try to get the token from the current session's OAuth data
+        if session[:oauth_token].present?
+          Rails.logger.info "Found OAuth token in session, attempting to save"
+          auth&.update!(access_token: session[:oauth_token])
+        end
       end
     rescue => e
       Rails.logger.error "GitHubアクセストークン保存エラー: #{e.message}"

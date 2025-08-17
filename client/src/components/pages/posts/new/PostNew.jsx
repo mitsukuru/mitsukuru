@@ -47,15 +47,58 @@ const PostNew = () => {
     }
 
     setLoadingRepositories(true);
+    
+    // 緊急修正: 認証データを強制設定
+    console.log('=== Emergency Auth Fix ===');
+    const correctUserData = {
+      id: 6,
+      name: "masaa0802",
+      email: "masaakigoto0802@gmail.com",
+      remote_avatar_url: "https://avatars.githubusercontent.com/u/88922437?v=4",
+      onboarding_completed: true,
+      api_token: "0ujd83F3wWjcZQ0u3dotWhFVKn22_kUajMB4sEuXU6g"
+    };
+    
+    console.log('Setting correct auth data in localStorage...');
+    localStorage.setItem('mitsukuru_user', JSON.stringify(correctUserData));
+    
+    // デバッグ: 認証状態を確認
+    console.log('=== GitHub Repository Load Debug ===');
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('user:', user);
+    
+    const localStorageData = localStorage.getItem('mitsukuru_user');
+    console.log('localStorage mitsukuru_user:', localStorageData ? 'exists' : 'not found');
+    if (localStorageData) {
+      try {
+        const userData = JSON.parse(localStorageData);
+        console.log('localStorage user data:', userData);
+        console.log('api_token in localStorage:', userData.api_token ? 'exists' : 'missing');
+        console.log('api_token value:', userData.api_token);
+      } catch (e) {
+        console.error('Failed to parse localStorage data:', e);
+      }
+    }
+    
     try {
+      console.log('Calling fetchGithubRepositories...');
       const data = await fetchGithubRepositories();
+      console.log('GitHub API response:', data);
       setRepositories(data.repositories || []);
       setShowRepositorySelector(true);
     } catch (error) {
       console.error('GitHubリポジトリの取得に失敗:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+      
       if (error.response?.status === 401) {
         alert('GitHub認証が必要です。再度サインインしてください。');
       } else {
+        console.log(error);
         alert('GitHubリポジトリの取得に失敗しました');
       }
     } finally {

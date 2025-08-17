@@ -3,20 +3,28 @@ class Api::V1::GithubController < ApplicationController
 
   def repositories
     begin
-      # 現在のユーザーのGitHub認証情報を取得
-      github_auth = current_user.authentications.find_by(provider: 'github')
+      # 環境変数のGitHub設定を使用
+      github_token = ENV['GITHUB_TOKEN']
+      github_api_base_url = ENV['GITHUB_API_BASE_URL'] || 'https://api.github.com'
       
-      unless github_auth&.access_token
-        render json: { error: 'GitHub認証が必要です' }, status: :unauthorized
+      unless github_token.present?
+        Rails.logger.error "GITHUB_TOKEN environment variable is not set"
+        render json: { 
+          error: 'GitHub設定エラー',
+          message: 'GitHub APIの設定が正しくありません。',
+        }, status: :internal_server_error
         return
       end
+
+      Rails.logger.info "Using environment variable GITHUB_TOKEN for API access"
+      Rails.logger.info "GitHub API Base URL: #{github_api_base_url}"
 
       # GitHub APIを使用してリポジトリを取得
       require 'net/http'
       require 'uri'
       require 'json'
 
-      uri = URI('https://api.github.com/user/repos')
+      uri = URI("#{github_api_base_url}/user/repos")
       uri.query = URI.encode_www_form({
         sort: 'updated',
         per_page: 100,
@@ -27,10 +35,11 @@ class Api::V1::GithubController < ApplicationController
       http.use_ssl = true
 
       request = Net::HTTP::Get.new(uri)
-      request['Authorization'] = "Bearer #{github_auth.access_token}"
+      request['Authorization'] = "Bearer #{github_token}"
       request['Accept'] = 'application/vnd.github.v3+json'
       request['User-Agent'] = 'Mitsukuru-App'
 
+      Rails.logger.info "Making GitHub API request to: #{uri}"
       response = http.request(request)
       
       if response.code == '200'

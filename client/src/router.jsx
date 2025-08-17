@@ -10,6 +10,7 @@ import Posts from "./components/pages/posts/Posts"
 import PostNew from "./components/pages/posts/new/PostNew"
 import PostShow from "./components/pages/posts/show/PostShow"
 import Settings from "./components/pages/settings/Settings"
+import DebugAuth from "./components/DebugAuth"
 import ProtectedRoute from "./components/common/ProtectedRoute"
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -72,6 +73,12 @@ const Router = () => {
                   <ProtectedRoute requireAuth={true}>
                     <Header />
                     <Settings />
+                  </ProtectedRoute>
+                }></Route>
+                <Route path="/debug" element={
+                  <ProtectedRoute requireAuth={false}>
+                    <Header />
+                    <DebugAuth />
                   </ProtectedRoute>
                 }></Route>
               </Routes>
