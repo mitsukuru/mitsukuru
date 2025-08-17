@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './PostNew.module.scss';
 import { useNavigate } from "react-router-dom";
 import { createPost } from '@/api/postApi';
-import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetchGithubRepositories } from '@/api/githubApi';
+import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft, X, ChevronLeft, ChevronRight, Github, ExternalLink } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
 
 const PostNew = () => {
@@ -14,9 +15,13 @@ const PostNew = () => {
     body: '',
     image_url: null,
     additional_image_files: [],
+    github_repository: null, // 選択されたGitHubリポジトリ
   }); 
   const [imagePreviews, setImagePreviews] = useState([]); // 複数画像プレビュー用の状態
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
+  const [repositories, setRepositories] = useState([]); // GitHubリポジトリリスト
+  const [loadingRepositories, setLoadingRepositories] = useState(false);
+  const [showRepositorySelector, setShowRepositorySelector] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,6 +38,49 @@ const PostNew = () => {
     
     checkAuth();
   }, [isAuthenticated, navigate, refreshAuth]);
+
+  // GitHubリポジトリを取得
+  const loadGithubRepositories = async () => {
+    if (!isAuthenticated || !user) {
+      alert('GitHubリポジトリを取得するには認証が必要です');
+      return;
+    }
+
+    setLoadingRepositories(true);
+    try {
+      const data = await fetchGithubRepositories();
+      setRepositories(data.repositories || []);
+      setShowRepositorySelector(true);
+    } catch (error) {
+      console.error('GitHubリポジトリの取得に失敗:', error);
+      if (error.response?.status === 401) {
+        alert('GitHub認証が必要です。再度サインインしてください。');
+      } else {
+        alert('GitHubリポジトリの取得に失敗しました');
+      }
+    } finally {
+      setLoadingRepositories(false);
+    }
+  };
+
+  // リポジトリを選択
+  const selectRepository = (repository) => {
+    setFormData(prev => ({
+      ...prev,
+      github_repository: repository,
+      title: repository.name, // リポジトリ名をプロダクト名として自動入力
+      description: repository.description || `${repository.name}のプロダクト説明`, // リポジトリの説明を概要として自動入力
+    }));
+    setShowRepositorySelector(false);
+  };
+
+  // リポジトリ選択をクリア
+  const clearRepositorySelection = () => {
+    setFormData(prev => ({
+      ...prev,
+      github_repository: null,
+    }));
+  };
 
   const handleChange = ({ target: { name, value, files } }) => {
     if (name === 'image_files' && files.length > 0) {
@@ -113,6 +161,14 @@ const PostNew = () => {
     formDataToSend.append('user_data[name]', user.name);
     formDataToSend.append('user_data[email]', user.email);
 
+    // GitHubリポジトリ情報を追加
+    if (formData.github_repository) {
+      formDataToSend.append('post[github_repository_id]', formData.github_repository.id);
+      formDataToSend.append('post[github_repository_name]', formData.github_repository.name);
+      formDataToSend.append('post[github_repository_url]', formData.github_repository.html_url);
+      formDataToSend.append('post[github_repository_description]', formData.github_repository.description || '');
+    }
+
     try {
       const response = await createPost(formDataToSend);
       console.log('投稿成功:', response);
@@ -136,6 +192,53 @@ const PostNew = () => {
       </div>
       
       <form onSubmit={handleSubmit} className={styles.form}>
+        {/* GitHubリポジトリ選択 */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            <Github className={styles.labelIcon} size={16} />
+            GitHubリポジトリ（オプション）
+          </label>
+          {formData.github_repository ? (
+            <div className={styles.selectedRepository}>
+              <div className={styles.repositoryInfo}>
+                <div className={styles.repositoryName}>
+                  <Github size={16} />
+                  {formData.github_repository.name}
+                </div>
+                <div className={styles.repositoryDescription}>
+                  {formData.github_repository.description || 'No description'}
+                </div>
+                <a 
+                  href={formData.github_repository.html_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={styles.repositoryLink}
+                >
+                  <ExternalLink size={14} />
+                  GitHubで開く
+                </a>
+              </div>
+              <button 
+                type="button" 
+                onClick={clearRepositorySelection}
+                className={styles.clearRepositoryButton}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          ) : (
+            <button 
+              type="button" 
+              onClick={loadGithubRepositories}
+              disabled={loadingRepositories}
+              className={styles.repositorySelectButton}
+            >
+              <Github size={16} />
+              {loadingRepositories ? 'リポジトリを取得中...' : 'GitHubリポジトリから選択'}
+            </button>
+          )}
+        </div>
+
         <div className={styles.formGroup}>
           <label htmlFor="title" className={styles.label}>
             <Type className={styles.labelIcon} size={16} />
@@ -284,8 +387,92 @@ const PostNew = () => {
           </button>
         </div>
       </form>
+
+      {/* GitHubリポジトリ選択モーダル */}
+      {showRepositorySelector && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h2>GitHubリポジトリを選択</h2>
+              <button 
+                onClick={() => setShowRepositorySelector(false)}
+                className={styles.modalCloseButton}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className={styles.modalContent}>
+              {repositories.length === 0 ? (
+                <div className={styles.noRepositories}>
+                  <Github size={48} />
+                  <p>リポジトリが見つかりませんでした</p>
+                  <p>GitHubにリポジトリを作成してから再度お試しください</p>
+                </div>
+              ) : (
+                <div className={styles.repositoryList}>
+                  {repositories.map((repo) => (
+                    <div 
+                      key={repo.id} 
+                      className={styles.repositoryItem}
+                      onClick={() => selectRepository(repo)}
+                    >
+                      <div className={styles.repositoryItemHeader}>
+                        <Github size={16} />
+                        <span className={styles.repositoryItemName}>{repo.name}</span>
+                        {repo.private && (
+                          <span className={styles.privateLabel}>Private</span>
+                        )}
+                      </div>
+                      <div className={styles.repositoryItemDescription}>
+                        {repo.description || 'No description provided'}
+                      </div>
+                      <div className={styles.repositoryItemMeta}>
+                        {repo.language && (
+                          <span className={styles.language}>
+                            <span className={styles.languageDot} style={{backgroundColor: getLanguageColor(repo.language)}}></span>
+                            {repo.language}
+                          </span>
+                        )}
+                        <span className={styles.stars}>★ {repo.stargazers_count}</span>
+                        <span className={styles.forks}>⑂ {repo.forks_count}</span>
+                        <span className={styles.updated}>
+                          Updated {new Date(repo.updated_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+// プログラミング言語の色を取得する関数
+const getLanguageColor = (language) => {
+  const colors = {
+    JavaScript: '#f1e05a',
+    TypeScript: '#2b7489',
+    Python: '#3572A5',
+    Java: '#b07219',
+    'C++': '#f34b7d',
+    'C#': '#239120',
+    PHP: '#4F5D95',
+    Ruby: '#701516',
+    Go: '#00ADD8',
+    Rust: '#dea584',
+    Swift: '#ffac45',
+    Kotlin: '#F18E33',
+    Dart: '#00B4AB',
+    HTML: '#e34c26',
+    CSS: '#1572B6',
+    Vue: '#2c3e50',
+    React: '#61DAFB',
+  };
+  return colors[language] || '#8b949e';
+};
 
 export default PostNew;

@@ -12,7 +12,18 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    @current_user ||= User.find_by(id: session[:user_id])
+    @current_user ||= authenticate_user
+  end
+
+  def authenticate_user
+    # First try token-based authentication from headers
+    if request.headers['Authorization'].present?
+      token = request.headers['Authorization'].gsub(/Bearer\s+/, '')
+      User.find_by_api_token(token)
+    # Fallback to session-based authentication
+    elsif session[:user_id].present?
+      User.find_by(id: session[:user_id])
+    end
   end
 
   def logged_in?

@@ -6,7 +6,7 @@ class Api::V1::OauthsController < ApplicationController
       github: {
         client_id: "Ov23lipUtZEQclrolCBR",
         callback_url: "http://127.0.0.1:3000/api/v1/callback?provider=github",
-        scope: "user:email"
+        scope: "user:email repo"
       },
       frontend: {
         base_url: "http://localhost:5173",
@@ -57,13 +57,17 @@ class Api::V1::OauthsController < ApplicationController
         Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
         Rails.logger.info "オンボーディング状況: #{@user.onboarding_completed}"
         
-        # LocalStorage用のユーザー情報をエンコード
+        # GitHubアクセストークンを保存
+        save_github_access_token(@user, provider)
+        
+        # LocalStorage用のユーザー情報をエンコード（API トークンを含める）
         user_data = {
           id: @user.id,
           name: @user.name,
           email: @user.email,
           remote_avatar_url: @user.remote_avatar_url,
-          onboarding_completed: @user.onboarding_completed
+          onboarding_completed: @user.onboarding_completed,
+          api_token: @user.api_token
         }.to_json
         encoded_user = Base64.strict_encode64(user_data)
         base_url = Rails.application.credentials.frontend[:development][:base_url]
@@ -82,13 +86,17 @@ class Api::V1::OauthsController < ApplicationController
           session[:user_id] = @user.id
           Rails.logger.info "OAuth新規ユーザー作成成功: ユーザーID #{@user.id} (#{provider})"
           Rails.logger.info "セッション設定: user_id=#{session[:user_id]}"
-          # LocalStorage用のユーザー情報をエンコード
+          
+          # GitHubアクセストークンを保存
+          save_github_access_token(@user, provider)
+          # LocalStorage用のユーザー情報をエンコード（API トークンを含める）
           user_data = {
             id: @user.id,
             name: @user.name,
             email: @user.email,
             remote_avatar_url: @user.remote_avatar_url,
-            onboarding_completed: @user.onboarding_completed
+            onboarding_completed: @user.onboarding_completed,
+            api_token: @user.api_token
           }.to_json
           encoded_user = Base64.strict_encode64(user_data)
           base_url = Rails.application.credentials.frontend[:development][:base_url]
@@ -131,5 +139,31 @@ class Api::V1::OauthsController < ApplicationController
     
     redirect_to "#{base_url}#{login_path}?#{error_params.to_query}", 
                allow_other_host: true
+  end
+
+  def save_github_access_token(user, provider)
+    return unless provider == 'github'
+    
+    begin
+      # Sorceryの @user_hash にアクセストークンが含まれている
+      Rails.logger.info "User hash keys: #{@user_hash&.keys}"
+      Rails.logger.info "Access token available: #{@user_hash&.dig('credentials', 'token')}"
+      
+      # GitHub認証レコードを取得
+      auth = user.authentications.find_by(provider: provider)
+      
+      if auth && @user_hash&.dig('credentials', 'token')
+        access_token = @user_hash['credentials']['token']
+        auth.update!(access_token: access_token)
+        Rails.logger.info "GitHubアクセストークンを保存: user_id=#{user.id}, token_length=#{access_token.length}"
+      else
+        Rails.logger.warn "GitHub認証またはアクセストークンが見つかりません: user_id=#{user.id}"
+        Rails.logger.warn "Auth record: #{auth.present?}"
+        Rails.logger.warn "User hash: #{@user_hash.present?}"
+      end
+    rescue => e
+      Rails.logger.error "GitHubアクセストークン保存エラー: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+    end
   end
 end

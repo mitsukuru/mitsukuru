@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post "/auth/logout" => "auth#logout"
       get "/onboarding/repositories" => "onboarding#get_repositories"
       post "/onboarding/complete" => "onboarding#complete_onboarding"
+      get "/github/repositories" => "github#repositories"
     end
   end
 end
