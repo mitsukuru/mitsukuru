@@ -5,13 +5,20 @@ class Api::V1::PostsController < ApplicationController
   before_action :check_post_owner, only: [:update, :destroy]
 
   def index
-    posts = Post.includes(:user).order(published_at: :desc)
-    render json: { 
-      status: 200, 
-      posts: posts.as_json(
+    posts = Post.includes(:user, :comments).order(published_at: :desc)
+    
+    posts_data = posts.map do |post|
+      post.as_json(
         include: { user: { only: [:id, :name, :remote_avatar_url] } },
         methods: [:all_images]
+      ).merge(
+        comments_count: post.comments_count
       )
+    end
+    
+    render json: { 
+      status: 200, 
+      posts: posts_data
     }
   end
 

@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   belongs_to :user
+  has_many :comments, dependent: :destroy
   mount_uploader :image_url, PostImageUploader
   
   # 追加画像のJSONシリアライズ
@@ -21,5 +22,9 @@ class Post < ApplicationRecord
     end
     
     images
+  end
+  
+  def comments_count
+    comments.count
   end
 end

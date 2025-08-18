@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { fetchPosts } from '@/api/postApi'
 import { fetchUsers } from '@/api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight, Heart, Eye, Image as ImageIcon, Filter, Search, RotateCcw } from 'lucide-react';
+import { User, Clock, ChevronLeft, ChevronRight, Heart, Image as ImageIcon, Filter, Search, RotateCcw, Eye } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link, useLocation } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
 import SuccessModal from '@/components/common/SuccessModal';
+import Comments from '@/components/features/Comments';
+import CommentModal from '@/components/common/CommentModal';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -14,9 +16,11 @@ const Home = () => {
   const location = useLocation();
   const [likes, setLikes] = useState({});
   const [likesCount, setLikesCount] = useState(0);
-  const [viewCount, setViewCount] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [commentsCount, setCommentsCount] = useState({});
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
   
   // フィルター状態
   const [searchTerm, setSearchTerm] = useState('');
@@ -136,13 +140,25 @@ const Home = () => {
     }));
   };
 
-  // 詳細画面を開く関数
-  const openDetail = (postId) => {
-    setViewCount((prev) => ({
+  // コメント数を更新する関数
+  const handleCommentCountChange = (postId, newCount) => {
+    setCommentsCount(prev => ({
       ...prev,
-      [postId]: (prev[postId] || 0) + 1 // 追加: ビューカウントを増加
+      [postId]: newCount
     }));
-    // TODO:詳細画面を開く処理をここに追加
+  };
+
+  // コメントモーダルを開く関数
+  const handleCommentClick = (postId) => {
+    const post = posts.find(p => p.id === postId);
+    setSelectedPost(post);
+    setShowCommentModal(true);
+  };
+
+  // コメントモーダルを閉じる関数
+  const closeCommentModal = () => {
+    setShowCommentModal(false);
+    setSelectedPost(null);
   };
 
   const fetchData = async () => {
@@ -150,6 +166,13 @@ const Home = () => {
       const [fetchedPosts, fetchedUsers] = await Promise.all([fetchPosts(), fetchUsers()]);
       setPosts(fetchedPosts.posts);
       setUsers(fetchedUsers.users);
+      
+      // コメント数を初期化
+      const initialCommentsCount = {};
+      fetchedPosts.posts.forEach(post => {
+        initialCommentsCount[post.id] = post.comments_count || 0;
+      });
+      setCommentsCount(initialCommentsCount);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
       // TODO: エラーハンドリングUIの追加を検討
@@ -196,6 +219,17 @@ const Home = () => {
         onClose={() => setShowSuccessModal(false)}
         message="投稿が完了しました！"
       />
+      
+      {selectedPost && (
+        <CommentModal
+          isOpen={showCommentModal}
+          onClose={closeCommentModal}
+          postId={selectedPost.id}
+          postTitle={selectedPost.title}
+          commentsCount={commentsCount[selectedPost.id] || 0}
+          onCommentCountChange={(newCount) => handleCommentCountChange(selectedPost.id, newCount)}
+        />
+      )}
       <div className={styles.container}>
         {/* 左サイドバー - フィルター機能 */}
         <div className={styles.sidebar}>
@@ -370,14 +404,15 @@ const Home = () => {
                 <div className={styles.postBottoms}>
                   <div className={styles.likeContainer}>
                     <button onClick={() => toggleLike(post.id)} className={styles.likeButton}>
-                      {likes[post.id] ? <Heart color="red" /> : <Heart color="gray" />}
+                      {likes[post.id] ? <Heart size={18} color="red" /> : <Heart size={18} color="gray" />}
                     </button>
                     <span className={styles.likesCount}>{likesCount[post.id] || 0}</span>
                   </div>
-                  <div className={styles.viewCountContainer}>
-                    <Eye className={styles.viewCountIcon} />
-                    <span className={styles.viewCount}>{viewCount[post.id] || 0}</span>
-                  </div>
+                  <Comments 
+                    postId={post.id}
+                    commentsCount={commentsCount[post.id] || 0}
+                    onCommentClick={handleCommentClick}
+                  />
                 </div>
               </div>
             </div>
