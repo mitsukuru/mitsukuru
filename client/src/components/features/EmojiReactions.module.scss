@@ -1,0 +1,237 @@
+.reactionsContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reactionButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  min-height: 24px;
+
+  &:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+  }
+
+  &.reacted {
+    background: #dbeafe;
+    border-color: #3b82f6;
+    color: #1e40af;
+
+    &:hover {
+      background: #bfdbfe;
+      border-color: #2563eb;
+    }
+  }
+}
+
+.emoji {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.count {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: #64748b;
+
+  .reacted & {
+    color: #1e40af;
+  }
+}
+
+.addReactionContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.addReactionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #64748b;
+
+  &:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #374151;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.emojiPicker {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  transform: translateY(-100%);
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  min-width: 240px;
+  animation: emojiPickerSlideIn 0.2s ease-out;
+
+  // 右端で切れないように調整
+  &::before {
+    content: '';
+    position: absolute;
+    right: -1px;
+    left: -1px;
+    bottom: -1px;
+    top: -1px;
+    border-radius: 12px;
+    z-index: -1;
+  }
+
+  // 画面右端で切れる場合は左に寄せる
+  @media (max-width: 640px) {
+    right: 0;
+    left: auto;
+  }
+}
+
+@keyframes emojiPickerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-90%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-100%) scale(1);
+  }
+}
+
+.emojiPickerHeader {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center;
+}
+
+.emojiGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  padding: 12px;
+}
+
+.emojiOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s ease;
+  position: relative;
+
+  &:hover {
+    background: #f3f4f6;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.alreadyReacted {
+    background: #dbeafe;
+    
+    &:hover {
+      background: #bfdbfe;
+    }
+
+    &::after {
+      content: '✓';
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 12px;
+      height: 12px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+      font-size: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+  }
+}
+
+// レスポンシブ対応
+@media (max-width: 768px) {
+  .reactionsContainer {
+    gap: 4px;
+  }
+
+  .reactionButton {
+    padding: 3px 6px;
+    min-height: 22px;
+  }
+
+  .emoji {
+    font-size: 12px;
+  }
+
+  .count {
+    font-size: 0.7rem;
+  }
+
+  .addReactionButton {
+    width: 22px;
+    height: 22px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .emojiPicker {
+    min-width: 200px;
+  }
+
+  .emojiGrid {
+    grid-template-columns: repeat(5, 1fr);
+    padding: 10px;
+  }
+
+  .emojiOption {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}

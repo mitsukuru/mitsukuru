@@ -361,46 +361,12 @@
 .postBottoms {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 24px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
   padding: 12px 15px;
   border-top: 1px solid #f1f5f9;
   margin-top: 20px;
-}
-
-.likeContainer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.likeButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-  
-  &:hover {
-    background: rgba(239, 68, 68, 0.1);
-    transform: scale(1.1);
-  }
-}
-
-.likesCount {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #64748b;
 }
 
 .noImage {

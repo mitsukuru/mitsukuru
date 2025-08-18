@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { fetchPosts } from '@/api/postApi'
 import { fetchUsers } from '@/api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight, Heart, Image as ImageIcon, Filter, Search, RotateCcw, Eye } from 'lucide-react';
+import { User, Clock, ChevronLeft, ChevronRight, Image as ImageIcon, Filter, Search, RotateCcw, Eye } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link, useLocation } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
 import SuccessModal from '@/components/common/SuccessModal';
 import Comments from '@/components/features/Comments';
 import CommentModal from '@/components/common/CommentModal';
+import EmojiReactions from '@/components/features/EmojiReactions';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const { refreshAuth } = useAuth();
   const location = useLocation();
-  const [likes, setLikes] = useState({});
-  const [likesCount, setLikesCount] = useState(0);
+  const [reactions, setReactions] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [commentsCount, setCommentsCount] = useState({});
@@ -128,15 +128,11 @@ const Home = () => {
     setFilterUser('all');
   };
 
-  // いいねをトグルする関数
-  const toggleLike = (postId) => {
-    setLikes((prev) => ({
+  // リアクションを更新する関数
+  const handleReactionChange = (postId, newReactions) => {
+    setReactions(prev => ({
       ...prev,
-      [postId]: !prev[postId]
-    }));
-    setLikesCount((prev) => ({
-      ...prev,
-      [postId]: (prev[postId] || 0) + (likes[postId] ? -1 : 1)
+      [postId]: newReactions
     }));
   };
 
@@ -173,6 +169,14 @@ const Home = () => {
         initialCommentsCount[post.id] = post.comments_count || 0;
       });
       setCommentsCount(initialCommentsCount);
+      
+      // リアクションを初期化（ダミーデータ）
+      const initialReactions = {};
+      fetchedPosts.posts.forEach(post => {
+        // 実際のアプリケーションではAPIからリアクションデータを取得
+        initialReactions[post.id] = {};
+      });
+      setReactions(initialReactions);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
       // TODO: エラーハンドリングUIの追加を検討
@@ -402,12 +406,11 @@ const Home = () => {
                   })()}
                 </div>
                 <div className={styles.postBottoms}>
-                  <div className={styles.likeContainer}>
-                    <button onClick={() => toggleLike(post.id)} className={styles.likeButton}>
-                      {likes[post.id] ? <Heart size={18} color="red" /> : <Heart size={18} color="gray" />}
-                    </button>
-                    <span className={styles.likesCount}>{likesCount[post.id] || 0}</span>
-                  </div>
+                  <EmojiReactions 
+                    postId={post.id}
+                    reactions={reactions[post.id] || {}}
+                    onReactionChange={handleReactionChange}
+                  />
                   <Comments 
                     postId={post.id}
                     commentsCount={commentsCount[post.id] || 0}
