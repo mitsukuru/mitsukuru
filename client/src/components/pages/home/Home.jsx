@@ -16,6 +16,7 @@ const Home = () => {
   const { refreshAuth } = useAuth();
   const location = useLocation();
   const [reactions, setReactions] = useState({});
+  const [userReactions, setUserReactions] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [commentsCount, setCommentsCount] = useState({});
@@ -129,11 +130,18 @@ const Home = () => {
   };
 
   // リアクションを更新する関数
-  const handleReactionChange = (postId, newReactions) => {
+  const handleReactionChange = (postId, newReactions, newUserReactions) => {
     setReactions(prev => ({
       ...prev,
       [postId]: newReactions
     }));
+    
+    if (newUserReactions) {
+      setUserReactions(prev => ({
+        ...prev,
+        [postId]: newUserReactions
+      }));
+    }
   };
 
   // コメント数を更新する関数
@@ -165,18 +173,18 @@ const Home = () => {
       
       // コメント数を初期化
       const initialCommentsCount = {};
+      const initialReactions = {};
+      const initialUserReactions = {};
+      
       fetchedPosts.posts.forEach(post => {
         initialCommentsCount[post.id] = post.comments_count || 0;
+        initialReactions[post.id] = post.reactions || {};
+        initialUserReactions[post.id] = post.user_reactions || {};
       });
-      setCommentsCount(initialCommentsCount);
       
-      // リアクションを初期化（ダミーデータ）
-      const initialReactions = {};
-      fetchedPosts.posts.forEach(post => {
-        // 実際のアプリケーションではAPIからリアクションデータを取得
-        initialReactions[post.id] = {};
-      });
+      setCommentsCount(initialCommentsCount);
       setReactions(initialReactions);
+      setUserReactions(initialUserReactions);
     } catch (error) {
       console.error("データの取得に失敗しました:", error);
       // TODO: エラーハンドリングUIの追加を検討
@@ -409,6 +417,7 @@ const Home = () => {
                   <EmojiReactions 
                     postId={post.id}
                     reactions={reactions[post.id] || {}}
+                    userReactions={userReactions[post.id] || {}}
                     onReactionChange={handleReactionChange}
                   />
                   <Comments 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_18_134040) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_18_151633) do
   create_table "authentications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "provider", null: false
@@ -59,6 +59,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_18_134040) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "reactions", force: :cascade do |t|
+    t.integer "post_id", null: false
+    t.integer "user_id", null: false
+    t.string "emoji_name", limit: 50, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id", "emoji_name"], name: "index_reactions_post_emoji"
+    t.index ["post_id", "user_id", "emoji_name"], name: "index_reactions_unique", unique: true
+    t.index ["user_id", "created_at"], name: "index_reactions_user_timeline"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "crypted_password"
@@ -79,4 +90,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_18_134040) do
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "posts", "users"
+  add_foreign_key "reactions", "posts"
+  add_foreign_key "reactions", "users"
 end

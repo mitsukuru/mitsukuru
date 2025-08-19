@@ -5,14 +5,28 @@ class Api::V1::PostsController < ApplicationController
   before_action :check_post_owner, only: [:update, :destroy]
 
   def index
-    posts = Post.includes(:user, :comments).order(published_at: :desc)
+    posts = Post.includes(:user, :comments, :reactions).order(published_at: :desc)
+    
+    # リアクションデータを一括取得（N+1問題対策）
+    post_ids = posts.pluck(:id)
+    reactions_data = Reaction.stats_for_posts(post_ids)
+    
+    # ログインユーザーのリアクション状態を一括取得
+    user_reactions_data = {}
+    if current_user
+      post_ids.each do |post_id|
+        user_reactions_data[post_id] = Reaction.user_reactions_for_post(post_id, current_user.id)
+      end
+    end
     
     posts_data = posts.map do |post|
       post.as_json(
         include: { user: { only: [:id, :name, :remote_avatar_url] } },
         methods: [:all_images]
       ).merge(
-        comments_count: post.comments_count
+        comments_count: post.comments_count,
+        reactions: reactions_data[post.id] || {},
+        user_reactions: user_reactions_data[post.id] || {}
       )
     end
     

@@ -3,7 +3,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :posts do
         resources :comments, only: [:index, :create, :destroy]
+        resources :reactions, only: [:index] do
+          collection do
+            post :toggle
+          end
+        end
       end
+      
+      # リアクション一括取得用
+      get "/posts/reactions/batch" => "reactions#batch"
       resources :users
       get "/me" => "users#me"
       post "/callback" => "oauths#callback"

@@ -5,6 +5,7 @@ class User < ApplicationRecord
   # Associations
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :reactions, dependent: :destroy
   has_many :authentications, dependent: :destroy
   accepts_nested_attributes_for :authentications
   

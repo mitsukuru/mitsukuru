@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
+  has_many :reactions, dependent: :destroy
   mount_uploader :image_url, PostImageUploader
   
   # 追加画像のJSONシリアライズ
@@ -26,5 +27,16 @@ class Post < ApplicationRecord
   
   def comments_count
     comments.count
+  end
+
+  # リアクション統計を高速取得
+  def reactions_stats
+    Reaction.stats_for_post(id)
+  end
+
+  # 特定ユーザーのリアクション状態を取得
+  def user_reactions(user_id)
+    return {} unless user_id
+    Reaction.user_reactions_for_post(id, user_id)
   end
 end
