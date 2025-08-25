@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './PostNew.module.scss';
 import { useNavigate } from "react-router-dom";
 import { createPost } from '@/api/postApi';
 import { fetchGithubRepositories } from '@/api/githubApi';
-import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft, X, ChevronLeft, ChevronRight, Github, ExternalLink } from 'lucide-react';
+import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft, X, ChevronLeft, ChevronRight, Github, ExternalLink, Tag } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
+import TagInput from '@/components/features/TagInput';
 
 const PostNew = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const PostNew = () => {
     image_url: null,
     additional_image_files: [],
     github_repository: null, // 選択されたGitHubリポジトリ
+    tags: [], // タグの配列
   }); 
   const [imagePreviews, setImagePreviews] = useState([]); // 複数画像プレビュー用の状態
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
@@ -125,6 +127,14 @@ const PostNew = () => {
     }));
   };
 
+  // タグの変更ハンドラー
+  const handleTagsChange = (newTags) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: newTags
+    }));
+  };
+
   const handleChange = ({ target: { name, value, files } }) => {
     if (name === 'image_files' && files.length > 0) {
       // 複数画像の処理
@@ -195,8 +205,15 @@ const PostNew = () => {
     }
     
     // 追加画像
-    formData.additional_image_files.forEach((file, index) => {
+    formData.additional_image_files.forEach((file) => {
       formDataToSend.append(`post[additional_image_files][]`, file);
+    });
+    
+    // タグを追加（デバッグログ付き）
+    console.log('Tags to be sent:', formData.tags);
+    formData.tags.forEach((tag) => {
+      formDataToSend.append('post[tags][]', tag);
+      console.log('Added tag to FormData:', tag);
     });
     
     // ユーザー情報を追加
@@ -204,23 +221,37 @@ const PostNew = () => {
     formDataToSend.append('user_data[name]', user.name);
     formDataToSend.append('user_data[email]', user.email);
 
-    // GitHubリポジトリ情報を追加
+    // GitHubリポジトリ情報を追加（データベースカラム名に合わせる）
     if (formData.github_repository) {
-      formDataToSend.append('post[github_repository_id]', formData.github_repository.id);
-      formDataToSend.append('post[github_repository_name]', formData.github_repository.name);
-      formDataToSend.append('post[github_repository_url]', formData.github_repository.html_url);
-      formDataToSend.append('post[github_repository_description]', formData.github_repository.description || '');
+      formDataToSend.append('post[repository_name]', formData.github_repository.name);
+      formDataToSend.append('post[repository_url]', formData.github_repository.html_url);
+      formDataToSend.append('post[repository_description]', formData.github_repository.description || '');
+    }
+
+    // デバッグ: FormDataの内容を確認
+    console.log('FormData contents:');
+    for (let [key, value] of formDataToSend.entries()) {
+      console.log(key, value);
     }
 
     try {
+      console.log('Sending post request...');
       const response = await createPost(formDataToSend);
       console.log('投稿成功:', response);
       navigate("/home", { state: { showSuccessModal: true } });
     } catch (error) {
-      console.error('投稿エラー:', error.response ? error.response.data : error.message);
+      console.error('投稿エラー:', error);
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
       if (error.response?.status === 401) {
         alert('認証に失敗しました。再度ログインしてください。');
         navigate('/sign_in');
+      } else if (error.response?.status === 422) {
+        alert(`投稿に失敗しました: ${JSON.stringify(error.response.data)}`);
+      } else {
+        alert(`投稿に失敗しました: ${error.message}`);
       }
     }
   };
@@ -331,6 +362,21 @@ const PostNew = () => {
             className={styles.textarea}
             rows={6}
           />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            <Tag className={styles.labelIcon} size={16} />
+            タグ
+          </label>
+          <TagInput 
+            tags={formData.tags}
+            onChange={handleTagsChange}
+            placeholder="プロダクトに関連するタグを追加してください..."
+          />
+          <div className={styles.tagHint}>
+            Enterキーやカンマでタグを追加できます。最大10個まで追加可能です。
+          </div>
         </div>
         
         <div className={styles.formGroup}>

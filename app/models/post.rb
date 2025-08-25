@@ -2,6 +2,8 @@ class Post < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :reactions, dependent: :destroy
+  has_many :post_tags, dependent: :destroy
+  has_many :tags, through: :post_tags
   mount_uploader :image_url, PostImageUploader
   
   # 追加画像のJSONシリアライズ

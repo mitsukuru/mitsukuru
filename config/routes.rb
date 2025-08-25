@@ -10,6 +10,12 @@ Rails.application.routes.draw do
         end
       end
       
+      resources :tags, only: [:index, :show, :create, :destroy] do
+        collection do
+          get :search
+        end
+      end
+      
       # リアクション一括取得用
       get "/posts/reactions/batch" => "reactions#batch"
       resources :users

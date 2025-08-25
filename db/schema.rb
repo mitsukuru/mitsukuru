@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_18_151633) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_22_142659) do
   create_table "authentications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "provider", null: false
@@ -43,6 +43,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_18_151633) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
+  create_table "post_tags", force: :cascade do |t|
+    t.integer "post_id", null: false
+    t.integer "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id", "tag_id"], name: "index_post_tags_unique", unique: true
+    t.index ["post_id"], name: "index_post_tags_post"
+    t.index ["tag_id"], name: "index_post_tags_tag"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -70,6 +80,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_18_151633) do
     t.index ["user_id", "created_at"], name: "index_reactions_user_timeline"
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name", limit: 50, null: false
+    t.string "color", limit: 7, default: "#3b82f6"
+    t.text "description"
+    t.integer "posts_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["posts_count"], name: "index_tags_on_posts_count"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "crypted_password"
@@ -89,6 +110,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_18_151633) do
   add_foreign_key "comments", "users"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "post_tags", "posts"
+  add_foreign_key "post_tags", "tags"
   add_foreign_key "posts", "users"
   add_foreign_key "reactions", "posts"
   add_foreign_key "reactions", "users"

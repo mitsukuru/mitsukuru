@@ -5,7 +5,7 @@ class Api::V1::PostsController < ApplicationController
   before_action :check_post_owner, only: [:update, :destroy]
 
   def index
-    posts = Post.includes(:user, :comments, :reactions).order(published_at: :desc)
+    posts = Post.includes(:user, :comments, :reactions, :tags).order(published_at: :desc)
     
     # リアクションデータを一括取得（N+1問題対策）
     post_ids = posts.pluck(:id)
@@ -21,7 +21,10 @@ class Api::V1::PostsController < ApplicationController
     
     posts_data = posts.map do |post|
       post.as_json(
-        include: { user: { only: [:id, :name, :remote_avatar_url] } },
+        include: { 
+          user: { only: [:id, :name, :remote_avatar_url] },
+          tags: { only: [:id, :name] }
+        },
         methods: [:all_images]
       ).merge(
         comments_count: post.comments_count,
@@ -40,7 +43,10 @@ class Api::V1::PostsController < ApplicationController
     render json: { 
       status: 200, 
       post: @post.as_json(
-        include: { user: { only: [:id, :name, :remote_avatar_url] } },
+        include: { 
+          user: { only: [:id, :name, :remote_avatar_url] },
+          tags: { only: [:id, :name] }
+        },
         methods: [:all_images]
       )
     }
@@ -76,8 +82,16 @@ class Api::V1::PostsController < ApplicationController
       end
     end
 
-    post = user.posts.build(permit_params)
+    # タグを除外したパラメータでPostを作成
+    post_params_without_tags = permit_params.except(:tags)
+    post = user.posts.build(post_params_without_tags)
     post.published_at = Time.zone.now
+    
+    # デバッグ: 受信したparams確認
+    Rails.logger.info "=== Post Creation Debug ==="
+    Rails.logger.info "Received params: #{params.inspect}"
+    Rails.logger.info "Tags param: #{params[:post][:tags].inspect}"
+    Rails.logger.info "=========================="
     
     # 最初にメイン投稿を保存
     if post.save
@@ -108,10 +122,34 @@ class Api::V1::PostsController < ApplicationController
         post.update(additional_images: additional_paths)
       end
       
+      # タグの処理
+      if params[:post][:tags].present?
+        Rails.logger.info "Processing tags: #{params[:post][:tags].inspect}"
+        tag_names = params[:post][:tags]
+        tag_objects = []
+        
+        tag_names.each do |tag_name|
+          next if tag_name.blank?
+          Rails.logger.info "Creating/finding tag: #{tag_name}"
+          tag = Tag.find_or_create_by(name: tag_name.strip.downcase)
+          Rails.logger.info "Tag created/found: #{tag.inspect} (class: #{tag.class})"
+          tag_objects << tag
+        end
+        
+        # 一度にすべてのタグを関連付け
+        post.tags = tag_objects
+        Rails.logger.info "Final post tags: #{post.tags.pluck(:name)}"
+      else
+        Rails.logger.info "No tags received in params"
+      end
+      
       render json: { 
         status: 201, 
         post: post.as_json(
-          include: { user: { only: [:id, :name, :remote_avatar_url] } },
+          include: { 
+            user: { only: [:id, :name, :remote_avatar_url] },
+            tags: { only: [:id, :name] }
+          },
           methods: [:all_images]
         )
       }, status: :created
@@ -124,10 +162,30 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def update
-    if @post.update(permit_params)
+    # タグを除外したパラメータで更新
+    post_params_without_tags = permit_params.except(:tags)
+    if @post.update(post_params_without_tags)
+      # タグの更新処理
+      if params[:post][:tags].present?
+        @post.tags.clear  # 既存のタグをクリア
+        tag_names = params[:post][:tags]
+        tag_objects = []
+        tag_names.each do |tag_name|
+          next if tag_name.blank?
+          tag = Tag.find_or_create_by(name: tag_name.strip.downcase)
+          tag_objects << tag
+        end
+        @post.tags = tag_objects
+      end
+      
       render json: { 
         status: 200, 
-        post: @post.as_json(include: { user: { only: [:id, :name, :remote_avatar_url] } })
+        post: @post.as_json(
+          include: { 
+            user: { only: [:id, :name, :remote_avatar_url] },
+            tags: { only: [:id, :name] }
+          }
+        )
       }
     else
       render json: { 
@@ -170,7 +228,11 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def permit_params
-    params.require(:post).permit(:title, :body, :description, :image_url)
+    params.require(:post).permit(
+      :title, :body, :description, :image_url,
+      :repository_name, :repository_url, :repository_description,
+      tags: []
+    )
   end
 
   def user_data_params
