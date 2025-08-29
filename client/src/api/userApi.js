@@ -10,3 +10,13 @@ export const fetchUsers = async () => {
     handleApiError(error, 'fetchUsers');
   }
 };
+
+export const fetchUserDashboard = async (userId) => {
+  try {
+    const res = await axios.get(`${API_CONFIG.endpoints.users}/${userId}`);
+    return res.data;
+  } catch (error) {
+    handleApiError(error, 'fetchUserDashboard');
+    throw error;
+  }
+};

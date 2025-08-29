@@ -63,7 +63,7 @@ const Header = () => {
                   <User className={styles.avatarIcon} title={user.name} />
                 )}
                 <div className={styles.userDropdown}>
-                  <Link to={`/users/${user.id}`}>プロフィール</Link>
+                  <Link to={`/dashboard/${user.id}`}>ダッシュボード</Link>
                   <Link to="/settings">設定</Link>
                   <button onClick={logout} className={styles.logoutButton}>
                     ログアウト

@@ -10,6 +10,7 @@ import Posts from "./components/pages/posts/Posts"
 import PostNew from "./components/pages/posts/new/PostNew"
 import PostShow from "./components/pages/posts/show/PostShow"
 import Settings from "./components/pages/settings/Settings"
+import Dashboard from "./components/pages/dashboard/Dashboard"
 import DebugAuth from "./components/DebugAuth"
 import ProtectedRoute from "./components/common/ProtectedRoute"
 
@@ -67,6 +68,12 @@ const Router = () => {
                   <ProtectedRoute requireAuth={true}>
                     <Header />
                     <PostShow />
+                  </ProtectedRoute>
+                }></Route>
+                <Route path="/dashboard/:id" element={
+                  <ProtectedRoute requireAuth={true}>
+                    <Header />
+                    <Dashboard />
                   </ProtectedRoute>
                 }></Route>
                 <Route path="/settings" element={

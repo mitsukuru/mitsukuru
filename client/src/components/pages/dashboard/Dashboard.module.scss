@@ -1,0 +1,559 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.userName {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.userTitle {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+  }
+
+  h3 {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0 0 0.75rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.chartsSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+
+  h3 {
+    font-size: 1.1rem;
+    color: #1f2937;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+  }
+}
+
+.tagsRanking {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tagRankItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}
+
+.rank {
+  font-weight: 700;
+  color: #667eea;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.tagName {
+  flex: 1;
+  font-weight: 500;
+  color: #374151;
+}
+
+.tagCount {
+  font-size: 0.85rem;
+  color: #6b7280;
+  background: #e5e7eb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.monthlyChart {
+  display: flex;
+  align-items: end;
+  gap: 0.5rem;
+  height: 200px;
+  overflow-x: auto;
+}
+
+.monthlyBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.bar {
+  width: 20px;
+  background: linear-gradient(to top, #667eea, #764ba2);
+  border-radius: 2px 2px 0 0;
+  min-height: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.monthLabel {
+  font-size: 0.7rem;
+  color: #6b7280;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  margin-bottom: 0.25rem;
+}
+
+.countLabel {
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.recentProjects {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+
+  h3 {
+    font-size: 1.1rem;
+    color: #1f2937;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+  }
+}
+
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.projectCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #d1d5db;
+  }
+}
+
+.projectTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.projectDescription {
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+.projectTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tag {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #dbeafe;
+}
+
+.projectDate {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+// モチベーションセクション
+.motivationSection {
+  margin-bottom: 2rem;
+}
+
+.motivationCard {
+  background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
+  border-radius: 1rem;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.motivationMessage {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.levelInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.levelBadge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nextLevel {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+}
+
+// 進捗セクション
+.progressSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.streakCard, .progressCard, .weeklyCard {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px -1px rgba(0, 0, 0, 0.15);
+  }
+
+  h3 {
+    font-size: 1rem;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+  }
+}
+
+.streakValue {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff6b6b, #feca57);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.streakLabel {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.progressBar {
+  background: #e5e7eb;
+  border-radius: 1rem;
+  height: 0.75rem;
+  margin: 1rem 0 0.5rem 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  background: linear-gradient(90deg, #10b981, #34d399);
+  height: 100%;
+  border-radius: 1rem;
+  transition: width 0.8s ease;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progressShine 2s infinite;
+  }
+}
+
+@keyframes progressShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progressText {
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.completed {
+  margin-left: 0.5rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.levelProgress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.levelProgressBar {
+  width: 100%;
+  background: #e5e7eb;
+  border-radius: 1rem;
+  height: 0.75rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.levelProgressFill {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  height: 100%;
+  border-radius: 1rem;
+  transition: width 0.8s ease;
+}
+
+// アチーブメントセクション
+.achievementsSection {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+
+  h3 {
+    font-size: 1.1rem;
+    color: #1f2937;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+  }
+}
+
+.achievementsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.achievementBadge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid;
+  transition: all 0.3s ease;
+  position: relative;
+
+  &.unlocked {
+    border-color: #10b981;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    transform: scale(1);
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .achievementIcon {
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+  }
+
+  &.locked {
+    border-color: #d1d5db;
+    background: #f9fafb;
+    opacity: 0.6;
+
+    .achievementIcon {
+      font-size: 2rem;
+      filter: grayscale(1) opacity(0.5);
+    }
+  }
+}
+
+.achievementInfo {
+  flex: 1;
+}
+
+.achievementName {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.achievementDesc {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.unlockedIcon {
+  font-size: 1.2rem;
+  animation: celebrate 0.5s ease;
+}
+
+@keyframes celebrate {
+  0% { transform: scale(0) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+// Score color classes
+.excellent {
+  color: #059669;
+}
+
+.good {
+  color: #2563eb;
+}
+
+.average {
+  color: #d97706;
+}
+
+.poor {
+  color: #dc2626;
+}
