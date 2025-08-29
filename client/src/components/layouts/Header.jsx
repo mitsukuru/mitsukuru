@@ -4,7 +4,6 @@ import logo from '@/assets/mitsukuru-removebg-preview.png';
 import { Link } from 'react-router-dom';
 import { SquarePen, User } from 'lucide-react';
 import Notification from '@/components/features/Notification';
-import DirectMessage from '@/components/features/DirectMessage';
 import useAuth from '@/hooks/useAuth';
 
 const Header = () => {
@@ -41,13 +40,6 @@ const Header = () => {
                 <div className={styles.headerIconButton}>
                   <div className={styles.iconWrapper}>
                     <Notification />
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div className={styles.headerIconButton}>
-                  <div className={styles.iconWrapper}>
-                    <DirectMessage />
                   </div>
                 </div>
               </li>

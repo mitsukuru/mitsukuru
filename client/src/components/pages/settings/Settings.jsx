@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { User, Lock, Bell, Palette, Save } from 'lucide-react';
 import styles from './Settings.module.scss';
 import useAuth from '@/hooks/useAuth';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/contexts/ToastContext';
 
 const Settings = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('profile');
+  const { theme, setThemeMode } = useTheme();
+  const { language, changeLanguage, availableLanguages, t } = useLanguage();
+  const { showSuccess, showError } = useToast();
+  const [activeTab, setActiveTab] = useState('privacy'); // デフォルトをprivacyに変更
   const [settings, setSettings] = useState({
     profile: {
       displayName: user?.name || '',
@@ -23,8 +29,8 @@ const Settings = () => {
       weeklyDigest: true
     },
     appearance: {
-      theme: 'light',
-      language: 'ja'
+      theme: theme,
+      language: language
     }
   });
 
@@ -48,11 +54,23 @@ const Settings = () => {
   const handleSave = async () => {
     try {
       console.log('Saving settings:', settings);
-      // TODO: API呼び出しを実装
-      alert('設定が保存されました');
+      
+      // テーマの変更を適用
+      if (settings.appearance.theme !== theme) {
+        setThemeMode(settings.appearance.theme);
+      }
+      
+      // 言語の変更を適用
+      if (settings.appearance.language !== language) {
+        changeLanguage(settings.appearance.language);
+      }
+      
+      // 成功トースト通知を表示
+      showSuccess(t('settings.saved'));
+      
     } catch (error) {
       console.error('設定の保存に失敗しました:', error);
-      alert('設定の保存に失敗しました');
+      showError('設定の保存に失敗しました');
     }
   };
 
@@ -173,28 +191,30 @@ const Settings = () => {
 
   const renderAppearanceSettings = () => (
     <div className={styles.settingsSection}>
-      <h3 className={styles.sectionTitle}>外観設定</h3>
+      <h3 className={styles.sectionTitle}>{t('settings.appearance')}</h3>
       <div className={styles.formGroup}>
-        <label className={styles.label}>テーマ</label>
+        <label className={styles.label}>{t('settings.theme')}</label>
         <select
           value={settings.appearance.theme}
           onChange={(e) => handleInputChange('appearance', 'theme', e.target.value)}
           className={styles.select}
         >
-          <option value="light">ライトモード</option>
-          <option value="dark">ダークモード</option>
-          <option value="auto">システム設定に従う</option>
+          <option value="light">{t('settings.theme.light')}</option>
+          <option value="dark">{t('settings.theme.dark')}</option>
         </select>
       </div>
       <div className={styles.formGroup}>
-        <label className={styles.label}>言語</label>
+        <label className={styles.label}>{t('settings.language')}</label>
         <select
           value={settings.appearance.language}
           onChange={(e) => handleInputChange('appearance', 'language', e.target.value)}
           className={styles.select}
         >
-          <option value="ja">日本語</option>
-          <option value="en">English</option>
+          {availableLanguages.map(lang => (
+            <option key={lang.code} value={lang.code}>
+              {lang.flag} {lang.name}
+            </option>
+          ))}
         </select>
       </div>
     </div>
@@ -240,7 +260,7 @@ const Settings = () => {
           <div className={styles.saveSection}>
             <button onClick={handleSave} className={styles.saveButton}>
               <Save size={20} />
-              設定を保存
+              {t('settings.save')}
             </button>
           </div>
         </main>
