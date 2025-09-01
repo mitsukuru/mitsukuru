@@ -91,12 +91,16 @@ class Reaction < ApplicationRecord
 
   private
 
-  # キャッシュ無効化
-  after_create :invalidate_cache
+  # キャッシュ無効化と通知作成
+  after_create :invalidate_cache, :create_reaction_notification
   after_destroy :invalidate_cache
 
   def invalidate_cache
     Rails.cache.delete("reactions_stats_#{post_id}")
     Rails.cache.delete("user_reactions_#{post_id}_#{user_id}")
+  end
+  
+  def create_reaction_notification
+    NotificationService.create_reaction_notification(self)
   end
 end

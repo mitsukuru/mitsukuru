@@ -7,6 +7,7 @@ const API_CONFIG = {
     posts: '/api/v1/posts',
     users: '/api/v1/users',
     me: '/api/v1/me',
+    notifications: '/api/v1/notifications',
     oauth: {
       config: '/api/v1/oauth/config',
       github: '/api/v1/github',

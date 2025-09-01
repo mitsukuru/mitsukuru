@@ -7,7 +7,13 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :reactions, dependent: :destroy
   has_many :authentications, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   accepts_nested_attributes_for :authentications
+  
+  # 未読通知数を取得
+  def unread_notifications_count
+    notifications.unread.count
+  end
   
   # Validations
   validates :email, presence: true, uniqueness: { case_sensitive: false }

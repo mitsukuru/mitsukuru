@@ -88,17 +88,22 @@ const translations = {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    // ローカルストレージから保存された言語を取得
-    const savedLanguage = localStorage.getItem('mitsukuru-language');
-    return savedLanguage || 'ja';
+    // ローカルストレージから保存された言語を取得（安全にアクセス）
+    if (typeof window !== 'undefined') {
+      const savedLanguage = localStorage.getItem('mitsukuru-language');
+      return savedLanguage || 'ja';
+    }
+    return 'ja';
   });
 
   useEffect(() => {
-    // 言語をローカルストレージに保存
-    localStorage.setItem('mitsukuru-language', language);
-    
-    // HTMLのlang属性を設定
-    document.documentElement.setAttribute('lang', language);
+    if (typeof window !== 'undefined') {
+      // 言語をローカルストレージに保存
+      localStorage.setItem('mitsukuru-language', language);
+      
+      // HTMLのlang属性を設定
+      document.documentElement.setAttribute('lang', language);
+    }
   }, [language]);
 
   const translate = (key, fallback = key) => {

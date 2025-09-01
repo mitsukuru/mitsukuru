@@ -15,10 +15,14 @@ export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
   const showToast = (message, type = 'success', duration = 3000) => {
-    const id = Date.now() + Math.random();
-    const newToast = { id, message, type, duration };
-    
-    setToasts(prevToasts => [...prevToasts, newToast]);
+    try {
+      const id = Date.now() + Math.random();
+      const newToast = { id, message, type, duration };
+      
+      setToasts(prevToasts => [...prevToasts, newToast]);
+    } catch (error) {
+      console.error('Toast表示エラー:', error);
+    }
   };
 
   const removeToast = (id) => {

@@ -12,17 +12,22 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    // ローカルストレージから保存されたテーマを取得
-    const savedTheme = localStorage.getItem('mitsukuru-theme');
-    return savedTheme || 'light';
+    // ローカルストレージから保存されたテーマを取得（安全にアクセス）
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('mitsukuru-theme');
+      return savedTheme || 'light';
+    }
+    return 'light';
   });
 
   useEffect(() => {
-    // テーマをローカルストレージに保存
-    localStorage.setItem('mitsukuru-theme', theme);
-    
-    // HTMLのdata-theme属性を設定
-    document.documentElement.setAttribute('data-theme', theme);
+    if (typeof window !== 'undefined') {
+      // テーマをローカルストレージに保存
+      localStorage.setItem('mitsukuru-theme', theme);
+      
+      // HTMLのdata-theme属性を設定
+      document.documentElement.setAttribute('data-theme', theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {
