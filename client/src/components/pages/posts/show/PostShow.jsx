@@ -149,7 +149,7 @@ const PostShow = () => {
   }, [modalOpen, currentImageIndex]);
 
   if (loading) {
-    return <Loading type="project" message="投稿とGitHub情報を読み込んでいます..." size="large" />;
+    return <Loading type="project" message="プロダクトとGitHub情報を読み込んでいます..." size="large" />;
   }
 
   if (error) {
@@ -206,7 +206,7 @@ const PostShow = () => {
           <h1 className={styles.projectTitle}>{post.title}</h1>
           <p className={styles.projectDescription}>{post.description}</p>
           
-          {/* プロジェクト統計 */}
+          {/* プロダクト統計 */}
           <div className={styles.projectStats}>
             {githubData.repository && (
               <>
@@ -230,7 +230,7 @@ const PostShow = () => {
             )}
           </div>
           
-          {/* プロジェクトリンク */}
+          {/* プロダクトリンク */}
           {post.repository_url && (
             <div className={styles.projectLinks}>
               <a 
@@ -252,7 +252,7 @@ const PostShow = () => {
           )}
         </div>
         
-        {/* プロジェクト画像 */}
+        {/* プロダクト画像 */}
         {post.all_images && post.all_images.length > 0 && (
           <div className={styles.projectImageContainer}>
             {post.all_images.length === 1 ? (
@@ -334,7 +334,7 @@ const PostShow = () => {
         {activeTab === 'overview' && (
           <div className={styles.overviewTab}>
             <div className={styles.contentSection}>
-              <h2 className={styles.sectionTitle}>プロジェクト詳細</h2>
+              <h2 className={styles.sectionTitle}>プロダクト詳細</h2>
               <div className={styles.postBody}>
                 {post.body.split('\n').map((line, index) => (
                   <p key={index}>{line}</p>
@@ -501,9 +501,9 @@ const PostShow = () => {
               </div>
             </div>
 
-            {/* プロジェクト評価 */}
+            {/* プロダクト評価 */}
             <div className={styles.contentSection}>
-              <h2 className={styles.sectionTitle}>プロジェクト評価</h2>
+              <h2 className={styles.sectionTitle}>プロダクト評価</h2>
               <div className={styles.projectScore}>
                 <div className={styles.scoreCard}>
                   <h3>信頼度スコア</h3>

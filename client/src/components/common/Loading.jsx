@@ -57,7 +57,7 @@ const Loading = ({
               </div>
             </div>
             <div className={styles.messageContainer}>
-              <h3 className={styles.title}>プロジェクトを読み込み中</h3>
+              <h3 className={styles.title}>プロダクトを読み込み中</h3>
               <p className={styles.message}>{message}</p>
             </div>
           </div>
