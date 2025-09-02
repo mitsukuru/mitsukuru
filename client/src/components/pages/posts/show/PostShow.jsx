@@ -13,6 +13,7 @@ import {
   Code, Users, GitCommit, Calendar, ExternalLink, Globe,
   Shield, Activity, BarChart3, BookOpen, X, ChevronLeft, ChevronRight
 } from 'lucide-react';
+import Loading, { GitHubLoading } from '../../../common/Loading';
 import styles from './PostShow.module.scss';
 
 const PostShow = () => {
@@ -148,11 +149,7 @@ const PostShow = () => {
   }, [modalOpen, currentImageIndex]);
 
   if (loading) {
-    return (
-      <div className={styles.postContainer}>
-        <p>読み込み中...</p>
-      </div>
-    );
+    return <Loading type="project" message="投稿とGitHub情報を読み込んでいます..." size="large" />;
   }
 
   if (error) {
@@ -315,6 +312,12 @@ const PostShow = () => {
           >
             <Github size={20} />
             GitHub詳細
+          </button>
+        )}
+        {githubData.loading && (
+          <button className={`${styles.tab} ${styles.disabled}`}>
+            <Github size={20} />
+            読み込み中...
           </button>
         )}
         <button 
