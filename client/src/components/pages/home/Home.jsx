@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { fetchPosts } from '@/api/postApi'
 import { fetchUsers } from '@/api/userApi';
-import { User, Clock, ChevronLeft, ChevronRight, Image as ImageIcon, Filter, Search, RotateCcw, Eye } from 'lucide-react';
+import { fetchTags } from '@/api/tagApi';
+import { User, Clock, ChevronLeft, ChevronRight, Image as ImageIcon, Search, X, Tag, ChevronDown } from 'lucide-react';
 import styles from './Home.module.scss';
 import { Link, useLocation } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
@@ -13,6 +14,7 @@ import EmojiReactions from '@/components/features/EmojiReactions';
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
+  const [tags, setTags] = useState([]);
   const { refreshAuth } = useAuth();
   const location = useLocation();
   const [reactions, setReactions] = useState({});
@@ -23,10 +25,10 @@ const Home = () => {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   
-  // フィルター状態
+  // 検索状態
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
-  const [filterUser, setFilterUser] = useState('all');
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [showTagDropdown, setShowTagDropdown] = useState(false);
 
   // 画像スライダー関数
   const nextImage = (postId, maxIndex) => {
@@ -86,47 +88,53 @@ const Home = () => {
     return images;
   };
 
-  // フィルタリングとソート機能
-  const filteredAndSortedPosts = useMemo(() => {
+  // 投稿の検索機能
+  const searchedPosts = useMemo(() => {
     let filtered = posts;
 
-    // 検索フィルター
+    // キーワード検索
     if (searchTerm) {
-      filtered = filtered.filter(post => 
-        post.app_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.description?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(post => {
+        const titleMatch = post.title?.toLowerCase().includes(searchTerm.toLowerCase());
+        const descriptionMatch = post.body?.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        return titleMatch || descriptionMatch;
+      });
     }
 
-    // ユーザーフィルター
-    if (filterUser !== 'all') {
-      filtered = filtered.filter(post => post.user_id === parseInt(filterUser));
+    // タグ検索
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter(post => {
+        if (!post.tags || post.tags.length === 0) return false;
+        return selectedTags.some(selectedTagId => 
+          post.tags.some(postTag => postTag.id === selectedTagId)
+        );
+      });
     }
 
-    // ソート
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case 'newest':
-          return new Date(b.created_at) - new Date(a.created_at);
-        case 'oldest':
-          return new Date(a.created_at) - new Date(b.created_at);
-        case 'name_asc':
-          return (a.app_name || '').localeCompare(b.app_name || '');
-        case 'name_desc':
-          return (b.app_name || '').localeCompare(a.app_name || '');
-        default:
-          return 0;
+    return filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [posts, searchTerm, selectedTags]);
+
+  // 検索をクリア
+  const clearSearch = () => {
+    setSearchTerm('');
+    setSelectedTags([]);
+  };
+
+  // タグ選択の処理
+  const handleTagSelect = (tagId) => {
+    setSelectedTags(prev => {
+      if (prev.includes(tagId)) {
+        return prev.filter(id => id !== tagId);
+      } else {
+        return [...prev, tagId];
       }
     });
+  };
 
-    return sorted;
-  }, [posts, searchTerm, sortBy, filterUser]);
-
-  // フィルターをクリア
-  const clearFilters = () => {
-    setSearchTerm('');
-    setSortBy('newest');
-    setFilterUser('all');
+  // 選択されたタグを削除
+  const removeSelectedTag = (tagId) => {
+    setSelectedTags(prev => prev.filter(id => id !== tagId));
   };
 
   // リアクションを更新する関数
@@ -167,9 +175,14 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const [fetchedPosts, fetchedUsers] = await Promise.all([fetchPosts(), fetchUsers()]);
+      const [fetchedPosts, fetchedUsers, fetchedTags] = await Promise.all([
+        fetchPosts(), 
+        fetchUsers(), 
+        fetchTags()
+      ]);
       setPosts(fetchedPosts.posts);
       setUsers(fetchedUsers.users);
+      setTags(fetchedTags.tags || []);
       
       // コメント数を初期化
       const initialCommentsCount = {};
@@ -243,82 +256,122 @@ const Home = () => {
         />
       )}
       <div className={styles.container}>
-        {/* 左サイドバー - フィルター機能 */}
+        {/* 左サイドバー - 検索機能 */}
         <div className={styles.sidebar}>
-          <div className={styles.filterContainer}>
-            <h3 className={styles.filterTitle}>
-              <Filter size={20} />
-              投稿を絞り込み
+          <div className={styles.searchContainer}>
+            <h3 className={styles.searchTitle}>
+              <Search size={20} />
+              投稿を検索
             </h3>
             
-            <div className={styles.filterGroup}>
-              <label className={styles.filterLabel}>検索</label>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+            <div className={styles.searchGroup}>
+              <label className={styles.searchLabel}>キーワード検索</label>
+              <div className={styles.searchBox}>
+                <Search className={styles.searchIcon} />
                 <input
                   type="text"
-                  placeholder="アプリ名や説明で検索..."
+                  placeholder="タイトル、内容で検索..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={styles.searchInput}
-                  style={{ paddingLeft: '36px' }}
                 />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className={styles.clearButton}
+                    title="キーワードをクリア"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
               </div>
             </div>
             
-            <div className={styles.filterGroup}>
-              <label className={styles.filterLabel}>並び順</label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className={styles.filterSelect}
-              >
-                <option value="newest">新着順</option>
-                <option value="oldest">古い順</option>
-                <option value="name_asc">名前順 (A-Z)</option>
-                <option value="name_desc">名前順 (Z-A)</option>
-              </select>
-            </div>
-            
-            <div className={styles.filterGroup}>
-              <label className={styles.filterLabel}>投稿者</label>
-              <select
-                value={filterUser}
-                onChange={(e) => setFilterUser(e.target.value)}
-                className={styles.filterSelect}
-              >
-                <option value="all">すべて</option>
-                {users.map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.name || `ユーザー${user.id}`}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <button
-              onClick={clearFilters}
-              className={styles.clearButton}
-              title="フィルターをクリア"
-            >
-              <RotateCcw size={16} />
-              フィルターをクリア
-            </button>
-            
-            <div className={styles.resultCount}>
-              <Eye size={16} />
-              {filteredAndSortedPosts.length}件の投稿
-              {searchTerm && (
-                <div style={{ fontSize: '0.75rem', marginTop: '4px', color: '#94a3b8' }}>
-                  「{searchTerm}」で検索中
+            <div className={styles.searchGroup}>
+              <label className={styles.searchLabel}>タグ検索</label>
+              <div className={styles.tagSelector}>
+                <button
+                  className={styles.tagDropdownButton}
+                  onClick={() => setShowTagDropdown(!showTagDropdown)}
+                >
+                  <Tag className={styles.tagIcon} />
+                  タグを選択
+                  <ChevronDown 
+                    className={`${styles.chevron} ${showTagDropdown ? styles.open : ''}`} 
+                  />
+                </button>
+                
+                {showTagDropdown && (
+                  <div className={styles.tagDropdown}>
+                    <div className={styles.tagList}>
+                      {tags.map(tag => (
+                        <label key={tag.id} className={styles.tagOption}>
+                          <input
+                            type="checkbox"
+                            checked={selectedTags.includes(tag.id)}
+                            onChange={() => handleTagSelect(tag.id)}
+                            className={styles.tagCheckbox}
+                          />
+                          <span className={styles.tagName}>{tag.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {selectedTags.length > 0 && (
+                <div className={styles.selectedTags}>
+                  {selectedTags.map(tagId => {
+                    const tag = tags.find(t => t.id === tagId);
+                    return tag ? (
+                      <div key={tagId} className={styles.selectedTag}>
+                        {tag.name}
+                        <button
+                          onClick={() => removeSelectedTag(tagId)}
+                          className={styles.removeTag}
+                          title="タグを削除"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : null;
+                  })}
                 </div>
+              )}
+            </div>
+            
+            <div className={styles.searchResults}>
+              <div className={styles.resultsHeader}>
+                <Search size={16} />
+                <span>{searchedPosts.length}件の投稿</span>
+              </div>
+              
+              {(searchTerm || selectedTags.length > 0) && (
+                <div className={styles.activeSearch}>
+                  {searchTerm && `「${searchTerm}」`}
+                  {searchTerm && selectedTags.length > 0 && ' + '}
+                  {selectedTags.length > 0 && `${selectedTags.length}個のタグ`}
+                  で検索中
+                </div>
+              )}
+              
+              {(searchTerm || selectedTags.length > 0) && (
+                <button
+                  onClick={clearSearch}
+                  className={styles.clearAllButton}
+                  title="すべてクリア"
+                >
+                  <X size={14} />
+                  すべてクリア
+                </button>
               )}
             </div>
           </div>
         </div>
 
         <div className={styles.postList}>
-          {filteredAndSortedPosts.map((post, index) =>
+          {searchedPosts.map((post, index) =>
             <div key={index} className={styles.appPost}>
               <div className={styles.postContent}>
                 <div className={styles.userInfo}>
@@ -430,6 +483,7 @@ const Home = () => {
             </div>
           )}
         </div>
+
         {/* 右サイドバー */}
         <div className={styles.rightSidebar}>
           {/* 将来的に他のコンテンツを追加可能 */}
