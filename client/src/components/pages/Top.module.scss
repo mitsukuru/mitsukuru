@@ -1,0 +1,597 @@
+.top {
+  width: 100%;
+  min-height: 100vh;
+}
+
+// Hero Section
+.hero {
+  position: relative;
+  padding: 24px;
+  background: #ffffff;
+  color: #1f2937;
+  text-align: center;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.heroShape1,
+.heroShape2,
+.heroShape3 {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 107, 53, 0.06);
+  animation: float 20s ease-in-out infinite;
+}
+
+.heroShape1 {
+  width: 500px;
+  height: 500px;
+  top: -250px;
+  right: -150px;
+  animation-delay: 0s;
+}
+
+.heroShape2 {
+  width: 350px;
+  height: 350px;
+  bottom: -100px;
+  left: -100px;
+  animation-delay: 5s;
+}
+
+.heroShape3 {
+  width: 200px;
+  height: 200px;
+  top: 50%;
+  left: 10%;
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(180deg);
+  }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: rgba(255, 107, 53, 0.08);
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 32px;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  color: #ff6b35;
+}
+
+.badgeIcon {
+  font-size: 1.2rem;
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+}
+
+.highlight {
+  color: #ff6b35;
+  position: relative;
+  font-weight: 900;
+}
+
+.heroDescription {
+  font-size: 1.25rem;
+  line-height: 1.9;
+  margin-bottom: 48px;
+  color: #6b7280;
+  font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
+}
+
+.mobileBreak {
+  @media (min-width: 769px) {
+    display: none;
+  }
+}
+
+.heroStats {
+  display: flex;
+  justify-content: center;
+  gap: 64px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 32px;
+  }
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.statLabel {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.heroCta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 48px;
+  background-color: #1f2937;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background-color: #000000;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 40px;
+  background-color: transparent;
+  color: #1f2937;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid #d1d5db;
+
+  &:hover {
+    background-color: #f9fafb;
+    transform: translateY(-3px);
+    border-color: #ff6b35;
+    color: #ff6b35;
+  }
+}
+
+.githubIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.arrowIcon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.secondaryButton:hover .arrowIcon {
+  transform: translateX(4px);
+}
+
+.heroNote {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+// Problem Section
+.problemSection {
+  padding: 120px 24px;
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  position: relative;
+}
+
+.problemContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.problemHeader {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.problemBadge,
+.featuresBadge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 2.75rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+}
+
+.problemSubtitle,
+.featuresSubtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.problemList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+
+  @media (max-width: 768px) {
+    gap: 32px;
+  }
+}
+
+.problemItem {
+  background-color: var(--bg-primary);
+  padding: 48px 32px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px var(--shadow);
+  transition: all 0.4s ease;
+  text-align: center;
+  position: relative;
+  border: 1px solid var(--border-primary);
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px var(--shadow);
+    border-color: #ff6b35;
+  }
+}
+
+.problemIconWrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  background: linear-gradient(135deg, #ff6b3515 0%, #f7931e15 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.problemItem:hover .problemIconWrapper {
+  transform: scale(1.1) rotate(5deg);
+  background: linear-gradient(135deg, #ff6b3525 0%, #f7931e25 100%);
+}
+
+.problemIcon {
+  font-size: 3rem;
+}
+
+.problemTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.problemText {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+// Features Section
+.featuresSection {
+  padding: 120px 24px;
+  background-color: var(--bg-primary);
+}
+
+.featuresHeader {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.featuresGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 48px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.featureCard {
+  background-color: var(--bg-secondary);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px var(--shadow);
+  transition: all 0.4s ease;
+  position: relative;
+  border: 1px solid var(--border-primary);
+
+  &:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 16px 48px var(--shadow);
+    border-color: #ff6b35;
+  }
+}
+
+.featureNumber {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ff6b35;
+  opacity: 0.2;
+  z-index: 1;
+  line-height: 1;
+}
+
+.featureImageWrapper {
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff6b3520 0%, #f7931e20 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.featureImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.featureCard:hover .featureImage {
+  transform: scale(1.05);
+}
+
+.featureOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+}
+
+.featureTag {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.featureContent {
+  padding: 40px 32px;
+}
+
+.featureTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.featureDescription {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 8px 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+      content: '';
+    }
+  }
+}
+
+// CTA Section
+.ctaSection {
+  padding: 120px 24px;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.ctaShape1,
+.ctaShape2 {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ctaShape1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -100px;
+}
+
+.ctaShape2 {
+  width: 300px;
+  height: 300px;
+  bottom: -80px;
+  left: -80px;
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 2.25rem;
+  }
+}
+
+.ctaDescription {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  margin-bottom: 48px;
+  opacity: 0.95;
+}
+
+.ctaFeatures {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 32px;
+  }
+}
+
+.ctaFeatureItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ctaFeatureIcon {
+  font-size: 1.5rem;
+}
+
+.ctaButtonLarge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 64px;
+  background-color: #1f2937;
+  color: white;
+  text-decoration: none;
+  border-radius: 14px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.02em;
+
+  &:hover {
+    background-color: #000000;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .githubIcon {
+    width: 28px;
+    height: 28px;
+  }
+}

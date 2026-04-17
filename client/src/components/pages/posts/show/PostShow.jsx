@@ -13,6 +13,8 @@ import {
   Code, Users, GitCommit, Calendar, ExternalLink, Globe,
   Shield, Activity, BarChart3, BookOpen, X, ChevronLeft, ChevronRight
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Loading, { GitHubLoading } from '../../../common/Loading';
 import styles from './PostShow.module.scss';
 
@@ -336,9 +338,13 @@ const PostShow = () => {
             <div className={styles.contentSection}>
               <h2 className={styles.sectionTitle}>プロダクト詳細</h2>
               <div className={styles.postBody}>
-                {post.body.split('\n').map((line, index) => (
-                  <p key={index}>{line}</p>
-                ))}
+                <div className={styles.markdown}>
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                  >
+                    {post.body}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
             

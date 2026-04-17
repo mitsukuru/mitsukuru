@@ -56,3 +56,14 @@ export const fetchRepositoryIssues = async (owner, repo) => {
     throw error;
   }
 };
+
+// GitHubリポジトリのREADMEを取得
+export const fetchRepositoryReadme = async (owner, repo) => {
+  try {
+    const res = await axios.get(`${API_CONFIG.endpoints.github}/repository/${owner}/${repo}/readme`);
+    return res.data;
+  } catch (error) {
+    handleApiError(error, 'fetchRepositoryReadme');
+    throw error;
+  }
+};

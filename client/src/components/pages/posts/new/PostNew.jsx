@@ -3,6 +3,7 @@ import styles from './PostNew.module.scss';
 import { useNavigate } from "react-router-dom";
 import { createPost } from '@/api/postApi';
 import { fetchGithubRepositories } from '@/api/githubApi';
+import { fetchRepositoryReadme } from '@/api/githubDetailApi';
 import { Upload, Send, FileText, Type, Image as ImageIcon, ArrowLeft, X, ChevronLeft, ChevronRight, Github, ExternalLink, Tag } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
 import TagInput from '@/components/features/TagInput';
@@ -109,7 +110,7 @@ const PostNew = () => {
   };
 
   // リポジトリを選択
-  const selectRepository = (repository) => {
+  const selectRepository = async (repository) => {
     setFormData(prev => ({
       ...prev,
       github_repository: repository,
@@ -117,6 +118,43 @@ const PostNew = () => {
       description: repository.description || `${repository.name}のプロダクト説明`, // リポジトリの説明を概要として自動入力
     }));
     setShowRepositorySelector(false);
+    
+    // READMEを取得して詳細説明に自動入力
+    try {
+      const ownerAndRepo = repository.full_name.split('/');
+      const [owner, repo] = ownerAndRepo;
+      console.log(`=== README Fetch Debug ===`);
+      console.log(`Repository: ${repository.full_name}`);
+      console.log(`Owner: ${owner}, Repo: ${repo}`);
+      console.log(`Fetching README for ${owner}/${repo}`);
+      
+      const readmeData = await fetchRepositoryReadme(owner, repo);
+      console.log('README API response:', readmeData);
+      
+      if (readmeData && readmeData.readme && readmeData.readme.content) {
+        console.log('README content length:', readmeData.readme.content.length);
+        console.log('README content preview:', readmeData.readme.content.substring(0, 200));
+        setFormData(prev => ({
+          ...prev,
+          body: readmeData.readme.content // READMEの内容を詳細説明に設定
+        }));
+        console.log('README successfully loaded into description');
+      } else {
+        console.log('README data structure issue:', {
+          hasReadmeData: !!readmeData,
+          hasReadmeProperty: !!(readmeData && readmeData.readme),
+          hasContent: !!(readmeData && readmeData.readme && readmeData.readme.content)
+        });
+      }
+    } catch (error) {
+      console.error('README取得に失敗:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+    }
   };
 
   // リポジトリ選択をクリア

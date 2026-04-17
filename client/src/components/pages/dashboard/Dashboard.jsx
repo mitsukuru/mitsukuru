@@ -89,61 +89,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* モチベーションセクション */}
-      <div className={styles.motivationSection}>
-        <div className={styles.motivationCard}>
-          <div className={styles.motivationMessage}>
-            {gamification?.motivation_message || '🚀 今日も素晴らしい一日にしましょう！'}
-          </div>
-          <div className={styles.levelInfo}>
-            <span className={styles.levelBadge}>Lv.{gamification?.level || 1}</span>
-            {gamification?.next_level_posts > 0 && (
-              <span className={styles.nextLevel}>
-                次のレベルまであと{gamification.next_level_posts}投稿
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* 今日の進捗とストリーク */}
-      <div className={styles.progressSection}>
-        <div className={styles.streakCard}>
-          <h3>🔥 連続投稿</h3>
-          <div className={styles.streakValue}>{gamification?.current_streak || 0}日</div>
-          <div className={styles.streakLabel}>
-            最長記録: {gamification?.longest_streak || 0}日
-          </div>
-        </div>
-
-        <div className={styles.progressCard}>
-          <h3>📈 今日の目標</h3>
-          <div className={styles.progressBar}>
-            <div 
-              className={styles.progressFill}
-              style={{ width: `${gamification?.today_progress?.progress_percentage || 0}%` }}
-            />
-          </div>
-          <div className={styles.progressText}>
-            {gamification?.today_progress?.posts_today || 0} / {gamification?.today_progress?.daily_goal || 1} 投稿
-            {gamification?.today_progress?.completed && <span className={styles.completed}>✅ 完了!</span>}
-          </div>
-        </div>
-
-        <div className={styles.weeklyCard}>
-          <h3>📊 今週の進捗</h3>
-          <div className={styles.progressBar}>
-            <div 
-              className={styles.progressFill}
-              style={{ width: `${gamification?.weekly_stats?.progress_percentage || 0}%` }}
-            />
-          </div>
-          <div className={styles.progressText}>
-            {gamification?.weekly_stats?.posts_this_week || 0} / {gamification?.weekly_stats?.weekly_goal || 3} 投稿
-          </div>
-        </div>
-      </div>
-
       {/* アチーブメント */}
       <div className={styles.achievementsSection}>
         <h3>🏆 アチーブメント</h3>
@@ -164,56 +109,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <h3>総プロダクト数</h3>
-          <div className={styles.statValue}>{statistics.total_posts}</div>
-          <div className={styles.statLabel}>公開済み</div>
-        </div>
-
-        <div className={styles.statCard}>
-          <h3>使用技術数</h3>
-          <div className={styles.statValue}>{statistics.unique_tags}</div>
-          <div className={styles.statLabel}>ユニーク技術</div>
-        </div>
-
-        <div className={styles.statCard}>
-          <h3>レベル進捗</h3>
-          <div className={styles.levelProgress}>
-            <div className={styles.levelProgressBar}>
-              <div 
-                className={styles.levelProgressFill}
-                style={{ width: `${gamification?.level_progress || 0}%` }}
-              />
-            </div>
-            <div className={styles.statValue}>{gamification?.level_progress || 0}%</div>
-          </div>
-          <div className={styles.statLabel}>次のレベルまで</div>
-        </div>
-
-        <div className={styles.statCard}>
-          <h3>最終投稿日</h3>
-          <div className={styles.statValue}>{formatDate(statistics.latest_post_date)}</div>
-          <div className={styles.statLabel}>アクティビティ</div>
-        </div>
-      </div>
-
+      {/* 月別投稿数 */}
       <div className={styles.chartsSection}>
         <div className={styles.chartCard}>
-          <h3>人気技術ランキング</h3>
-          <div className={styles.tagsRanking}>
-            {Object.entries(statistics.popular_tags).map(([tagName, count], index) => (
-              <div key={tagName} className={styles.tagRankItem}>
-                <span className={styles.rank}>#{index + 1}</span>
-                <span className={styles.tagName}>{tagName}</span>
-                <span className={styles.tagCount}>{count}プロダクト</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.chartCard}>
-          <h3>月別投稿数</h3>
+          <h3>📊 月別投稿数</h3>
           <div className={styles.monthlyChart}>
             {Object.entries(statistics.monthly_posts).map(([month, count]) => (
               <div key={month} className={styles.monthlyBar}>
@@ -229,8 +128,9 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* 投稿したプロダクトの一覧 */}
       <div className={styles.recentProjects}>
-        <h3>最近のプロダクト</h3>
+        <h3>📱 投稿したプロダクト</h3>
         <div className={styles.projectsList}>
           {recent_posts.map((post) => (
             <div key={post.id} className={styles.projectCard}>

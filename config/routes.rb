@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       get "/github/repository/:owner/:repo/contributors" => "github_detail#show_contributors"
       get "/github/repository/:owner/:repo/languages" => "github_detail#show_languages"
       get "/github/repository/:owner/:repo/issues" => "github_detail#show_issues"
+      get "/github/repository/:owner/:repo/readme" => "github_detail#show_readme"
     end
   end
 end

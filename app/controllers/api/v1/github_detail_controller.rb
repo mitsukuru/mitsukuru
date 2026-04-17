@@ -2,12 +2,16 @@ require 'net/http'
 require 'json'
 
 class Api::V1::GithubDetailController < ApplicationController
-  before_action :require_login
+  # before_action :require_login
   
   # リポジトリの詳細情報を取得
   def show_repository
     owner = params[:owner]
     repo = params[:repo]
+    
+    Rails.logger.info "GitHub Detail API - show_repository called"
+    Rails.logger.info "Current user: #{current_user&.id} (#{current_user&.name})"
+    Rails.logger.info "Session user_id: #{session[:user_id]}"
     
     begin
       repo_data = fetch_github_api("repos/#{owner}/#{repo}")
@@ -197,10 +201,67 @@ class Api::V1::GithubDetailController < ApplicationController
     end
   end
   
+  # リポジトリのREADMEを取得
+  def show_readme
+    owner = params[:owner]
+    repo = params[:repo]
+    
+    Rails.logger.info "README fetch request for #{owner}/#{repo}"
+    
+    begin
+      readme_data = fetch_github_api("repos/#{owner}/#{repo}/readme")
+      Rails.logger.info "GitHub API response received for README"
+      
+      # Base64デコード
+      require 'base64'
+      if readme_data['content'].present?
+        # 空白文字を取り除いてからデコード
+        content_cleaned = readme_data['content'].gsub(/\s/, '')
+        readme_content = Base64.decode64(content_cleaned)
+        Rails.logger.info "README content decoded successfully, length: #{readme_content.length}"
+      else
+        Rails.logger.warn "README content is empty"
+        readme_content = ""
+      end
+      
+      render json: {
+        status: 200,
+        readme: {
+          name: readme_data['name'],
+          path: readme_data['path'],
+          content: readme_content,
+          encoding: readme_data['encoding'],
+          size: readme_data['size'],
+          sha: readme_data['sha'],
+          html_url: readme_data['html_url'],
+          download_url: readme_data['download_url']
+        }
+      }
+    rescue => e
+      Rails.logger.error "GitHub README API Error: #{e.class}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      render json: {
+        status: 500,
+        error: 'README の取得に失敗しました',
+        message: e.message,
+        details: e.class.to_s
+      }, status: :internal_server_error
+    end
+  end
+  
   private
   
   def fetch_github_api(endpoint)
-    github_token = current_user.authentications.find_by(provider: 'github')&.access_token
+    Rails.logger.info "Fetching GitHub API: #{endpoint}"
+    
+    # 現在のユーザーがいる場合はトークンを使用、いない場合は匿名アクセス
+    github_token = nil
+    if current_user
+      github_token = current_user.authentications.find_by(provider: 'github')&.access_token
+      Rails.logger.info "GitHub token available: #{!!github_token}"
+    else
+      Rails.logger.warn "No authenticated user - using anonymous GitHub API access"
+    end
     
     uri = URI("https://api.github.com/#{endpoint}")
     http = Net::HTTP.new(uri.host, uri.port)
@@ -211,10 +272,13 @@ class Api::V1::GithubDetailController < ApplicationController
     request['Accept'] = 'application/vnd.github.v3+json'
     request['User-Agent'] = 'Mitsukuru-App'
     
+    Rails.logger.info "Making request to: #{uri}"
     response = http.request(request)
+    Rails.logger.info "GitHub API response code: #{response.code}"
     
     if response.code.to_i >= 400
       error_data = JSON.parse(response.body) rescue {}
+      Rails.logger.error "GitHub API Error: #{response.code} - #{error_data['message'] || response.body}"
       raise "GitHub API Error: #{response.code} - #{error_data['message'] || response.body}"
     end
     

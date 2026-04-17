@@ -46,76 +46,6 @@ body {
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-/* Top */
-.top {
-  padding: 100px 0;
-}
-
-.top_title {
-  font-size: 35px;
-  text-align: center;
-}
-
-.nayami {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-  line-height: 2;
-}
-
-.img_trouble_person_text {
-  margin: 20px;
-}
-
-.img_trouble_person_text h2 {
-  margin: 10px 0px;
-}
-
-.img_trouble_person_text p {
-  text-align: left;
-}
-
-.img_trouble_person {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-}
-
-.function {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
-  justify-content: center;
-  margin: 180px auto;
-  gap: 24px;
-}
-
-.community {
-  width: 100%;
-  max-width: 500px;
-}
-
-.community_description {
-  font-size: smaller;
-}
-
-.analysis {
-  width: 100%;
-  max-width: 500px;
-}
-
-.analysis_description {
-  font-size: smaller;
-}
-.img_community {
-  height: 200px;
-  object-fit: cover;
-}
-
-.img_analysis {
-  height: 200px;
-  object-fit: cover;
-}
 
 
 
@@ -123,40 +53,64 @@ body {
 .header {
   display: flex;
   justify-content: space-between;
-  text-align: left;
+  align-items: center;
+  padding: 20px 40px;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
 .header li {
   list-style-type: none;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .header .logo {
-  width: 160px;
-  margin: 5px;
+  width: 140px;
+  margin: 0;
   aspect-ratio: 250 / 80;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.header .logo:hover {
+  transform: scale(1.05);
 }
 
 .menu {
   display: flex;
   justify-content: space-between;
   column-gap: 8px;
-  margin-right: 2rem;
 }
 
 .menu ul {
   display: flex;
   align-items: center;
-  gap: 30px;
-  margin: auto;
+  gap: 24px;
+  margin: 0;
 }
 
 .menu a {
   text-decoration: none;
-  color: black;
-  font-weight: bold;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 28px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.menu a:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: #ff6b35;
+  transform: translateY(-2px);
 }
 
 /* SignIn */
