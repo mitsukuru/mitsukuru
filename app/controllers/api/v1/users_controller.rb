@@ -180,11 +180,6 @@ class Api::V1::UsersController < ApplicationController
     achievements << { name: "Tech Explorer", description: "5つの技術を使用", icon: "🔧", unlocked: unique_tags >= 5 }
     achievements << { name: "Full Stack", description: "10つの技術を使用", icon: "💻", unlocked: unique_tags >= 10 }
     
-    # ストリーク
-    current_streak = calculate_posting_streak(posts)
-    achievements << { name: "Consistent", description: "3日連続投稿", icon: "🔥", unlocked: current_streak >= 3 }
-    achievements << { name: "Dedicated", description: "7日連続投稿", icon: "💪", unlocked: current_streak >= 7 }
-    
     achievements
   end
 
