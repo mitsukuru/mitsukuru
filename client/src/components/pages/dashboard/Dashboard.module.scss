@@ -1,6 +1,6 @@
 // ── tokens ──────────────────────────────────────────
-$accent:   #6366f1;
-$accent2:  #8b5cf6;
+$accent:   #f97316;
+$accent2:  #ea580c;
 $surface:  #ffffff;
 $bg:       #f1f5f9;
 $text:     #0f172a;
@@ -225,7 +225,7 @@ $shadow:   0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
   font-size: .75rem;
   font-weight: 600;
   color: $accent;
-  background: #ede9fe;
+  background: #fff7ed;
   padding: .2rem .6rem;
   border-radius: 99px;
 }
@@ -335,8 +335,8 @@ $shadow:   0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
   transition: border-color .15s, box-shadow .15s, transform .15s;
 
   &:hover {
-    border-color: #c4b5fd;
-    box-shadow: 0 4px 16px rgba(99,102,241,.1);
+    border-color: #fed7aa;
+    box-shadow: 0 4px 16px rgba(249,115,22,.15);
     transform: translateY(-1px);
   }
 }
@@ -401,7 +401,7 @@ $shadow:   0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
   font-size: .7rem;
   font-weight: 600;
   color: $accent;
-  background: #ede9fe;
+  background: #fff7ed;
   border-radius: 4px;
   padding: .15rem .45rem;
 }

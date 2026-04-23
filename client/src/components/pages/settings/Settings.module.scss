@@ -48,7 +48,7 @@
   }
   
   &.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     
@@ -107,7 +107,7 @@
   
   &:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #f97316;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
   }
   
@@ -144,7 +144,7 @@
   width: 20px;
   height: 20px;
   margin-right: 12px;
-  accent-color: #667eea;
+  accent-color: #f97316;
   cursor: pointer;
 }
 
@@ -157,7 +157,7 @@
 
 
 .saveButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: white;
   border: none;
   padding: 16px 32px;

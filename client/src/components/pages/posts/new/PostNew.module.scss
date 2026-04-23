@@ -78,7 +78,7 @@
   
   &:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: #f97316;
   }
   
   &::placeholder {
@@ -101,7 +101,7 @@
   
   &:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: #f97316;
   }
   
   &::placeholder {
@@ -133,7 +133,7 @@
   font-weight: 400;
   
   &:hover {
-    border-color: #6366f1;
+    border-color: #f97316;
     background: #f3f4f6;
     color: #374151;
   }
@@ -281,7 +281,7 @@
   }
   
   &.active {
-    border-color: #667eea;
+    border-color: #f97316;
     box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
   }
 }
@@ -318,7 +318,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #6366f1;
+  background: #f97316;
   color: white;
   border: none;
   border-radius: 6px;
